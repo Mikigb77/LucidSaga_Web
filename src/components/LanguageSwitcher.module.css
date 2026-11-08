@@ -1,0 +1,31 @@
+.switcher {
+  display: inline-flex;
+  padding: 3px;
+  border: 1px solid var(--outline-soft);
+  border-radius: 999px;
+  background: rgba(17, 20, 27, 0.6);
+}
+
+.option {
+  min-width: 38px;
+  padding: 6px 9px;
+  border-radius: 999px;
+  color: var(--text-3);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-align: center;
+  text-decoration: none;
+  transition:
+    color 0.2s ease,
+    background-color 0.2s ease;
+}
+
+.option:hover {
+  color: var(--text);
+}
+
+.option[aria-current="page"] {
+  background: var(--surface-high);
+  color: var(--gold-hi);
+}
