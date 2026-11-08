@@ -1,0 +1,14 @@
+# Only what the build needs goes into the image's build context.
+.git
+.github
+.next
+node_modules
+infra
+docs
+scripts
+coverage
+*.md
+!README.md
+.env*
+Dockerfile
+.dockerignore

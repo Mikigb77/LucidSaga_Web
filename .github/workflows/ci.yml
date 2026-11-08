@@ -1,0 +1,97 @@
+name: CI
+
+# Every PR goes into dev, and merging dev into main deploys (docs/DEPLOY.md). CI runs on every PR
+# and on pushes to both; the deploy waits for this workflow's run on the main commit it deploys.
+on:
+  pull_request:
+  push:
+    branches: [main, dev]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  # Formatting, lint, types, unit tests and the production build, on the Node the image runs.
+  web:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    container: node:22.23.4-bookworm-slim
+    env:
+      NEXT_TELEMETRY_DISABLED: "1"
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ~/.npm
+          key: npm-${{ hashFiles('package-lock.json') }}
+          restore-keys: npm-
+      - run: npm ci --no-audit --no-fund
+      - run: npm run format:check
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm run build
+
+  # Builds the Cloud Run image and serves it as Cloud Run would, on port 8080 as a non-root user,
+  # then checks the pages a visitor and a link preview reach.
+  image:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - run: docker build --build-arg SITE_URL=https://lucidsaga.example -t lucid-saga-web .
+      - run: docker run -d --name web -p 8080:8080 lucid-saga-web
+      - name: Smoke test
+        run: |
+          infra/deploy.sh smoke http://localhost:8080
+          for page in /es /ca /og/en.jpg /robots.txt /sitemap.xml /icon.png; do
+            code=$(curl -s -o /dev/null -w '%{http_code}' "http://localhost:8080$page")
+            test "$code" = 200 || { echo "::error::$page gave $code"; exit 1; }
+          done
+          test "$(curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/en/nowhere)" = 404
+          # A Spanish browser lands on the Spanish page.
+          curl -s -o /dev/null -D - -H 'Accept-Language: es-ES,es;q=0.9' http://localhost:8080/ |
+            grep -qi '^location: /es' || { echo "::error::/ didn't send a Spanish browser to /es"; exit 1; }
+          # The address baked in at build time reaches the canonical links.
+          curl -s http://localhost:8080/en | grep -q 'https://lucidsaga.example/en'
+          test "$(docker exec web id -u)" != 0 || { echo "::error::The server runs as root."; exit 1; }
+      - if: always()
+        run: docker logs web || true
+
+  # Only dev merges into main, because that merge deploys. Every other PR goes into dev.
+  into-main:
+    if: github.event_name == 'pull_request' && github.base_ref == 'main'
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Only dev merges into main
+        env:
+          HEAD_REF: ${{ github.head_ref }}
+          HEAD_REPO: ${{ github.event.pull_request.head.repo.full_name }}
+        run: |
+          if [ "$HEAD_REF" != dev ] || [ "$HEAD_REPO" != "$GITHUB_REPOSITORY" ]; then
+            echo "::error::PRs go into dev, and only dev merges into main, which deploys. Change this PR's base branch to dev."
+            exit 1
+          fi
+
+  # The deploy scripts and workflows (docs/DEPLOY.md), with no credentials: the real gcloud runs
+  # offline and signed out to check every flag the scripts pass.
+  infra:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - run: shellcheck -x infra/*.sh infra/tests/*.sh
+      # Every workflow, with shellcheck on their scripts.
+      - run: docker run --rm -v "$PWD:/repo" --workdir /repo rhysd/actionlint:1.7.12 -color
+      - uses: google-github-actions/setup-gcloud@aa5489c8933f4cc7a4f7d45035b3b1440c9c10db # v3.0.1
+      - run: infra/tests/check-gcloud-flags.sh

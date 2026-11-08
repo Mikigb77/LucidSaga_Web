@@ -1,0 +1,519 @@
+.section {
+  position: relative;
+  padding-block: clamp(88px, 11vw, 150px);
+}
+
+.head {
+  max-width: 760px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+  margin-top: 52px;
+}
+
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 26px;
+  border-radius: var(--radius-xl);
+  background: linear-gradient(180deg, var(--surface-low), var(--surface) 70%);
+  box-shadow: inset 0 0 0 1px var(--outline-soft);
+  overflow: hidden;
+  transition:
+    box-shadow 0.35s ease,
+    transform 0.35s var(--ease-out);
+}
+
+.card:hover {
+  box-shadow:
+    inset 0 0 0 1px rgba(227, 182, 107, 0.35),
+    0 20px 50px rgba(0, 0, 0, 0.35);
+}
+
+.title {
+  font-size: 1.28rem;
+  line-height: 1.3;
+}
+
+.body {
+  margin-top: 10px;
+  color: var(--text-2);
+  font-size: 15.5px;
+}
+
+.visual {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 150px;
+  margin-bottom: 22px;
+}
+
+/* Pictures: a scene from a story, across two columns. */
+.pictures {
+  grid-column: span 2;
+  min-height: 460px;
+  padding: 0;
+  justify-content: flex-end;
+}
+
+.picture {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 1.6s var(--ease-out);
+}
+
+.pictures:hover .picture {
+  transform: scale(1.03);
+}
+
+.overlay {
+  position: relative;
+  padding: 120px 30px 28px;
+  background: linear-gradient(180deg, transparent, rgba(11, 13, 18, 0.82) 45%, rgba(11, 13, 18, 0.96));
+}
+
+.overlay .body {
+  max-width: 56ch;
+}
+
+/* Voice: a play button and a waveform, and the four studio voices. */
+.player {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 18px 12px 12px;
+  border-radius: 999px;
+  background: var(--surface-mid);
+  box-shadow: inset 0 0 0 1px var(--outline-soft);
+}
+
+.playButton {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: var(--gold);
+  box-shadow: 0 0 24px rgba(227, 182, 107, 0.45);
+}
+
+.playButton svg {
+  width: 18px;
+  height: 18px;
+  fill: var(--ink);
+}
+
+.wave {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: space-between;
+  height: 34px;
+}
+
+.wave i {
+  width: 3px;
+  height: 100%;
+  border-radius: 2px;
+  background: linear-gradient(180deg, var(--gold-hi), var(--gold-lo));
+  animation: wave 1.3s ease-in-out infinite;
+  animation-delay: calc(var(--i) * -0.11s);
+  transform: scaleY(0.3);
+}
+
+.wave i:nth-child(3n) {
+  animation-duration: 1.05s;
+}
+
+.wave i:nth-child(4n + 1) {
+  animation-duration: 1.6s;
+}
+
+.voices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 14px;
+}
+
+.voiceName,
+.voiceOn {
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+}
+
+.voiceName {
+  color: var(--text-3);
+  box-shadow: inset 0 0 0 1px var(--outline-soft);
+}
+
+.voiceOn {
+  color: var(--ink);
+  background: var(--gold-hi);
+  font-weight: 600;
+}
+
+/* Languages: the composer's hint in each language, lit in turn. */
+.hints {
+  display: grid;
+  gap: 8px;
+}
+
+.hint {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  border-radius: 999px;
+  background: var(--surface-mid);
+  box-shadow: inset 0 0 0 1px var(--outline-soft);
+  color: var(--text-2);
+  font-size: 14px;
+  animation: light-up 6s ease-in-out infinite;
+  animation-delay: calc(var(--i) * 2s);
+}
+
+.hint b {
+  min-width: 24px;
+  color: var(--gold);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+}
+
+/* Logic: the app's "How it played out" sheet. */
+.sheet {
+  padding: 16px 18px;
+  border-radius: var(--radius-lg);
+  background: var(--surface-mid);
+  box-shadow: inset 0 0 0 1px var(--outline-soft);
+}
+
+.sheetTitle {
+  color: var(--gold);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.sheet ul {
+  display: grid;
+  gap: 8px;
+  margin: 10px 0 0;
+  padding: 0;
+  list-style: none;
+  font-family: var(--font-serif), Georgia, serif;
+  font-size: 14px;
+  color: var(--text);
+}
+
+.sheet li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.lineIcon {
+  width: 17px;
+  height: 17px;
+  margin-top: 2px;
+  flex-shrink: 0;
+  fill: none;
+  stroke: var(--jade);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.sheet li:last-child .lineIcon {
+  stroke: var(--gold);
+  stroke-width: 1.6;
+}
+
+/* World: a sun that keeps crossing the sky, and the app's time and event chips. */
+.sky {
+  position: relative;
+  height: 64px;
+  margin-bottom: 12px;
+  border-bottom: 1px dashed var(--outline);
+  overflow: hidden;
+}
+
+.sun {
+  position: absolute;
+  bottom: -14px;
+  left: -10%;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--gold-hi), var(--gold) 60%);
+  box-shadow: 0 0 30px rgba(227, 182, 107, 0.7);
+  animation: arc 9s ease-in-out infinite;
+}
+
+.worldChips {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.timeChip,
+.eventChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  border-radius: 999px;
+  font-size: 12.5px;
+}
+
+.timeChip {
+  padding: 5px 11px;
+  background: var(--surface-mid);
+  color: var(--text-2);
+}
+
+.timeChip svg {
+  width: 14px;
+  height: 14px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+}
+
+.eventChip {
+  padding: 7px 13px;
+  background: color-mix(in srgb, var(--jade) 15%, var(--ink));
+  color: var(--jade);
+}
+
+.eventChip b {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* Memory: across two columns, the words beside the app's Memory panel. */
+.memory {
+  grid-column: span 2;
+  display: grid;
+  grid-template-columns: 1fr 1.1fr;
+  align-items: center;
+  gap: 28px;
+}
+
+.memoryPanel {
+  display: flex;
+  flex-direction: column;
+  padding: 18px;
+  border-radius: var(--radius-lg);
+  background: var(--ink);
+  box-shadow: inset 0 0 0 1px var(--outline-soft);
+}
+
+.panelTitle {
+  font-family: var(--font-display), Georgia, serif;
+  font-size: 20px;
+}
+
+.panelSub {
+  margin-top: 2px;
+  color: var(--text-3);
+  font-size: 12.5px;
+}
+
+.memoryPanel ul {
+  display: grid;
+  gap: 10px;
+  margin: 14px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.memoryPanel li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: var(--radius-md);
+  background: var(--surface-low);
+}
+
+.memoryPanel li > span:last-child {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.memoryPanel b {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.memoryPanel small {
+  color: var(--text-3);
+  font-size: 12.5px;
+}
+
+.avatar {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: linear-gradient(140deg, #3a3150, #1d2230);
+  color: var(--gold-hi);
+  font-family: var(--font-display), Georgia, serif;
+  font-size: 15px;
+}
+
+.gone .avatar {
+  filter: grayscale(1);
+  opacity: 0.55;
+}
+
+.gone b {
+  color: var(--text-3);
+  text-decoration: line-through;
+  text-decoration-color: rgba(239, 122, 130, 0.7);
+}
+
+/* Dictation: a listening mic and the words it heard. */
+.dictation .visual {
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.micRing {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--gold);
+}
+
+.micRing::before,
+.micRing::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 1.5px solid var(--gold);
+  animation: ring 2.4s ease-out infinite;
+}
+
+.micRing::after {
+  animation-delay: 1.2s;
+}
+
+.micRing svg {
+  width: 24px;
+  height: 24px;
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 1.9;
+  stroke-linecap: round;
+}
+
+.transcript {
+  font-family: var(--font-serif), Georgia, serif;
+  font-size: 15px;
+  font-style: italic;
+  color: var(--text);
+}
+
+@keyframes wave {
+  0%,
+  100% {
+    transform: scaleY(0.25);
+  }
+  50% {
+    transform: scaleY(1);
+  }
+}
+
+@keyframes light-up {
+  0%,
+  33%,
+  100% {
+    color: var(--text-2);
+    box-shadow: inset 0 0 0 1px var(--outline-soft);
+  }
+  8%,
+  25% {
+    color: var(--text);
+    box-shadow:
+      inset 0 0 0 1px rgba(227, 182, 107, 0.55),
+      0 0 24px rgba(227, 182, 107, 0.15);
+  }
+}
+
+@keyframes arc {
+  0% {
+    left: -10%;
+    bottom: -20px;
+  }
+  50% {
+    bottom: 26px;
+  }
+  100% {
+    left: 100%;
+    bottom: -20px;
+  }
+}
+
+@keyframes ring {
+  from {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  to {
+    transform: scale(1.8);
+    opacity: 0;
+  }
+}
+
+@media (max-width: 1100px) {
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .memory {
+    grid-template-columns: 1fr;
+  }
+
+  .dictation {
+    grid-column: span 2;
+  }
+}
+
+@media (max-width: 760px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .pictures,
+  .memory,
+  .dictation {
+    grid-column: auto;
+  }
+
+  .pictures {
+    min-height: 420px;
+  }
+}

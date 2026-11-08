@@ -2,7 +2,8 @@
 # Runs every gcloud command the scripts can issue against the real gcloud, offline and signed out,
 # to prove that the installed gcloud accepts every command and flag. The commands come from the
 # dry runs, plus the ones a dry run can't show (a re-run's update-oidc and undelete, the rollback).
-# Each must fail on the network or the missing sign-in, never on its arguments.
+# gcloud checks the arguments before it goes online, so a command still running after a few
+# seconds has passed; one rejected fails at once.
 # Nothing reaches Google Cloud: gcloud gets an empty configuration and a proxy that refuses every
 # connection.
 #
@@ -27,6 +28,7 @@ export CLOUDSDK_COMPONENT_MANAGER_DISABLE_UPDATE_CHECK=1
 export CLOUDSDK_PROXY_TYPE=http
 export CLOUDSDK_PROXY_ADDRESS=127.0.0.1
 export CLOUDSDK_PROXY_PORT=9
+export CLOUDSDK_CORE_CHECK_GCE_METADATA=false
 unset HTTPS_PROXY HTTP_PROXY https_proxy http_proxy
 mkdir -p "$CLOUDSDK_CONFIG"
 
@@ -44,8 +46,8 @@ image="europe-west1-docker.pkg.dev/playable-anime/lucid-saga-web/web@sha256:0000
 cat >>"$WORK/commands" <<EOF2
 gcloud iam workload-identity-pools undelete $WIF_POOL --project=$PROJECT_ID --location=global
 gcloud iam workload-identity-pools providers undelete $WIF_PROVIDER --project=$PROJECT_ID --location=global --workload-identity-pool=$WIF_POOL
-gcloud iam workload-identity-pools providers update-oidc $WIF_PROVIDER --project=$PROJECT_ID --location=global --workload-identity-pool=$WIF_POOL --issuer-uri=https://token.actions.githubusercontent.com --attribute-mapping=google.subject=assertion.sub --attribute-condition=true
-gcloud iam workload-identity-pools describe $WIF_POOL --project=$PROJECT_ID --location=global --format=value(state)
+gcloud iam workload-identity-pools providers update-oidc $WIF_PROVIDER --project=$PROJECT_ID --location=global --workload-identity-pool=$WIF_POOL --issuer-uri=https://token.actions.githubusercontent.com --attribute-mapping=google.subject=assertion.sub '--attribute-condition=true'
+gcloud iam workload-identity-pools describe $WIF_POOL --project=$PROJECT_ID --location=global '--format=value(state)'
 gcloud run services describe $SERVICE --project=$PROJECT_ID --region=$REGION --format=json
 gcloud auth configure-docker $REGISTRY_HOST --quiet
 EOF2
@@ -61,7 +63,7 @@ while IFS= read -r line; do
   # The dry runs print each command quoted for a shell, so the shell splits it back.
   eval "set -- $line"
   shift # gcloud
-  out="$(timeout 60 gcloud "$@" 2>&1 >/dev/null || true)"
+  out="$(timeout "${GCLOUD_PARSE_SECONDS:-8}" gcloud "$@" 2>&1 >/dev/null || true)"
   if printf '%s' "$out" | grep -qE 'unrecognized arguments|Invalid choice|argument .*: (expected|invalid)|is not a valid|must be specified|ERROR: \(gcloud\) Invalid value'; then
     echo "REJECTED: $line" >&2
     printf '%s\n' "$out" | head -n 5 >&2

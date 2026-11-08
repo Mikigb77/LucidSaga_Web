@@ -1,0 +1,137 @@
+# Deploys the website from main. See docs/DEPLOY.md.
+#
+# Every PR goes into dev, and merging dev into main is the deploy: the push to main starts this.
+# It can also be started by hand on main, for a dry run or to deploy main again.
+#
+# 1. CI must have passed on this exact commit; this waits for it.
+# 2. Sign in to Google Cloud through Workload Identity Federation, with no key.
+# 3. Build the image with the site's address baked in and push it to Artifact Registry.
+# 4. Deploy it to the lucid-saga-web Cloud Run service and move all traffic to it.
+# 5. Check that / sends a visitor to a language and /en loads. If that or any step since the
+#    deploy began fails, roll traffic back to the revision that served before.
+#
+# "Dry run" signs in, checks the setup and builds the image, then only prints the rest.
+
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: Dry run (sign in, check and build, but push and deploy nothing)
+        type: boolean
+        default: false
+
+permissions: {}
+
+# One deploy at a time, and a queued one is never replaced by a dry run, which has its own queue.
+concurrency:
+  group: deploy-web${{ inputs.dry_run && '-dry-run' || '' }}
+  cancel-in-progress: false
+
+jobs:
+  ci-green:
+    name: CI passed on this commit
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    permissions:
+      actions: read
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - run: infra/require-green-ci.sh
+        env:
+          GH_TOKEN: ${{ github.token }}
+
+  deploy:
+    name: ${{ inputs.dry_run && 'Dry run' || 'Deploy' }}
+    needs: ci-green
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    permissions:
+      contents: read
+      id-token: write
+    env:
+      DRY_RUN: ${{ inputs.dry_run && '1' || '' }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - id: config
+        run: infra/deploy.sh github-outputs
+
+      - id: auth
+        uses: google-github-actions/auth@7c6bc770dae815cd3e89ee6cdf493a5fab2cc093 # v3.0.0
+        with:
+          project_id: ${{ steps.config.outputs.project_id }}
+          workload_identity_provider: ${{ steps.config.outputs.wif_provider }}
+          service_account: ${{ steps.config.outputs.deployer_sa }}
+          token_format: access_token
+
+      - uses: google-github-actions/setup-gcloud@aa5489c8933f4cc7a4f7d45035b3b1440c9c10db # v3.0.1
+
+      - name: Check the bootstrap
+        run: infra/deploy.sh preflight
+
+      - uses: docker/login-action@81c6f93d4bc991e510b342a00b419b3bb4efc5c6 # v4.7.0
+        if: ${{ !inputs.dry_run }}
+        with:
+          registry: ${{ steps.config.outputs.registry_host }}
+          username: oauth2accesstoken
+          password: ${{ steps.auth.outputs.access_token }}
+
+      - uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4.4.1
+
+      - id: build
+        name: Build the image
+        uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc # v7.4.0
+        with:
+          context: .
+          platforms: linux/amd64
+          push: ${{ !inputs.dry_run }}
+          provenance: false
+          build-args: SITE_URL=${{ steps.config.outputs.site_url }}
+          tags: ${{ steps.config.outputs.image }}:${{ github.sha }}
+          labels: org.opencontainers.image.revision=${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - id: image
+        name: Pin the image by digest
+        env:
+          IMAGE: ${{ steps.config.outputs.image }}
+          DIGEST: ${{ steps.build.outputs.digest }}
+        run: |
+          if [ -n "$DRY_RUN" ]; then
+            echo "ref=$IMAGE:$GITHUB_SHA" >>"$GITHUB_OUTPUT"
+          elif [ -n "$DIGEST" ]; then
+            echo "ref=$IMAGE@$DIGEST" >>"$GITHUB_OUTPUT"
+          else
+            echo "::error::The build returned no digest, so the service can't be pinned to the image just built."
+            exit 1
+          fi
+
+      - id: service
+        name: Deploy the service
+        run: infra/deploy.sh service "$IMAGE_REF"
+        env:
+          IMAGE_REF: ${{ steps.image.outputs.ref }}
+
+      - id: smoke
+        name: Check the site
+        if: ${{ !inputs.dry_run }}
+        run: infra/deploy.sh smoke "$SITE_URL"
+        env:
+          SITE_URL: ${{ steps.config.outputs.site_url }}
+
+      # Any failure once the deploy step has started, including the smoke test.
+      - name: Roll back to the previous revision
+        if: ${{ failure() && steps.service.outputs.previous_revision != '' }}
+        run: infra/deploy.sh rollback "$PREVIOUS_REVISION"
+        env:
+          PREVIOUS_REVISION: ${{ steps.service.outputs.previous_revision }}
