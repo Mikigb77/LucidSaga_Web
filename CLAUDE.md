@@ -23,6 +23,7 @@ The game itself, and its requirements, are in [Mikigb77/PlayableAnime](https://g
    "coming soon" until the Play listing is live. Google's Play badge is only for a live listing.
 6. The legal pages say only what the app and the backend actually do. When either changes what data
    it keeps, where it goes or who can see it, update `src/content/legal` in all three languages
-   and `company.version` ([docs/LEGAL.md](docs/LEGAL.md)).
+   and `company.version` ([docs/LEGAL.md](docs/LEGAL.md)). The app shows the same privacy policy:
+   copy a change to its words to PlayableAnime's `docs/PRIVACY.md` and `app/assets/legal`.
 7. Respect reduced motion: every animation must stop or settle under
    `prefers-reduced-motion: reduce`.

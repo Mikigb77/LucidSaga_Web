@@ -25,8 +25,8 @@ law before the Play listing goes live.
 - **Contacts:** `lucidsaga@garbar.tech` for general enquiries and `lucidsaga.support@garbar.tech`
   for support, privacy and deletion, following TaskFlow's `taskflow@` and `taskflow.support@`.
   They must exist as aliases of the company mailbox before the pages go live.
-- **Data and processors:** PlayableAnime `docs/PRIVACY.md` (the app's own policy), `docs/API.md`
-  (`/v1/me/export`, `DELETE /v1/me`) and the requirements it cites: accounts and sign-in (T8),
+- **Data and processors:** PlayableAnime's draft `docs/PRIVACY.md`, `docs/API.md`
+  (`/v1/me/export`, `DELETE /v1/me`) and the requirements they cite: accounts and sign-in (T8),
   age (F8), reports (F6), content settings (F7), credits (K1 to K8), dictation (V5, V6), reading
   aloud (V9), privacy (T12). Vertex AI runs on the `global` endpoint (`VERTEX_LOCATION`), so the
   policy says Google may process outside the EU. The game server and its storage are in
@@ -35,7 +35,7 @@ law before the Play listing goes live.
   data, Export my data, Delete account, Delete my account, Dictation, This device.
 - **Minimum age:** 16 (Miki, 2026-11-08), so no parent's consent is needed anywhere in the EU;
   under-17s still get Teen stories only (F8). 13 would need a parental-consent step for 13 to 15
-  year olds in much of the EU. The app's `MIN_SIGNUP_AGE` must say 16 too.
+  year olds in much of the EU. PlayableAnime#142 sets the app's `MIN_SIGNUP_AGE` to 16.
 - **Logs:** 30 days, Cloud Logging's default. **Backups:** Neon's restore window, not stated as a
   number.
 - **Purchases:** none yet (K3 to K5 are P1). The purchase and withdrawal clauses apply only once
@@ -43,11 +43,19 @@ law before the Play listing goes live.
 - **Website:** no analytics or tracking. The only cookie, `lang`, is set when a visitor picks a
   language in the switcher (`src/components/LanguageLink.tsx`), never on its own.
 
+## The app's copy of the privacy policy
+
+The app shows the same Privacy Policy, in PlayableAnime `docs/PRIVACY.md` and
+`app/assets/legal/privacy_{en,es,ca}.md` (PlayableAnime#142, copied from this site at 6fc36a9). It
+is word for word, except where the app shows it: "this website" reads "our website", the
+operator's details are a list, links are written out as addresses, and a closing line points to
+`/{lang}/privacy` here. When the privacy words here change, make the same change to those four
+files in a PlayableAnime PR, so the app and the site never say different things.
+
 ## Before the Play listing
 
-- The app's `MIN_SIGNUP_AGE` must match `company.minimumAge` (16).
-- The app shows its own copy of the privacy policy (PlayableAnime `app/assets/legal`), still with
-  placeholders. Make it match these pages, or link to them.
+- Check that PlayableAnime#142 is merged, so the app signs up from 16 (`company.minimumAge`) and
+  shows this policy instead of its draft.
 - When purchases arrive, check the purchase, renewal and withdrawal sections against the real
   offer, and add a business telephone if consumer law requires it for distance contracts.
 - Change `company.version` whenever the words change, and tell players in the app about a change
