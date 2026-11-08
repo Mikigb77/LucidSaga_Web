@@ -2,29 +2,14 @@ import { NextResponse, type NextRequest } from "next/server";
 
 import { defaultLocale, hasLocale, localeCookie, negotiateLocale } from "@/i18n/locales";
 
-const ONE_YEAR = 60 * 60 * 24 * 365;
-
 /**
- * Sends a visitor without a language in the path to one: the language they picked before (a
- * cookie), else the best match for their browser's languages, else English. A page with a language
- * in its path is served as is, and remembers that language for the next visit to /.
+ * Sends a visitor without a language in the path to one: the language they picked before in the
+ * language switch (a cookie, components/LanguageLink), else the best match for their browser's
+ * languages, else English. A page with a language in its path is served as is.
  */
 export function proxy(request: NextRequest) {
   const { pathname, search } = request.nextUrl;
-  const first = pathname.split("/")[1];
-
-  if (hasLocale(first)) {
-    const response = NextResponse.next();
-    if (request.cookies.get(localeCookie)?.value !== first) {
-      response.cookies.set(localeCookie, first, {
-        path: "/",
-        maxAge: ONE_YEAR,
-        sameSite: "lax",
-        secure: request.nextUrl.protocol === "https:",
-      });
-    }
-    return response;
-  }
+  if (hasLocale(pathname.split("/")[1])) return NextResponse.next();
 
   const remembered = request.cookies.get(localeCookie)?.value;
   const locale = hasLocale(remembered)

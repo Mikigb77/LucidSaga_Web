@@ -141,9 +141,46 @@ export const en = {
   },
   footer: {
     tagline: "An endless story that remembers everything you do.",
-    rights: "© 2026 Lucid Saga",
+    rights: "© 2026 GARBAR, IN-TEC, S.L.",
     trademark: "Google Play is a trademark of Google LLC.",
     languages: "Languages",
+    legal: "Legal",
+    support: "Support",
+  },
+  legal: {
+    back: "Back to Lucid Saga",
+    documents: "Legal documents",
+    contents: "On this page",
+    summary: "At a glance",
+    inForce: "In force since",
+    operator: "Operator",
+    taxId: "Tax number (NIF)",
+    address: "Registered address",
+    register: "Mercantile Registry",
+    registration:
+      "Registered in the Barcelona Mercantile Registry, volume 49105, folio 130, sheet 607875, entry 1",
+    generalContact: "General enquiries",
+    supportContact: "Support, privacy and deletion",
+    write: "Email support",
+    deletion: "Write a deletion request",
+    withdrawal: "Send a withdrawal",
+    emailHelp:
+      "This opens an email for you to review and send. If nothing opens, send it from your usual email to this address, with this subject.",
+    recipient: "To",
+    subject: "Subject",
+    subjects: {
+      privacy: "Lucid Saga: privacy or support request",
+      deletion: "Delete my Lucid Saga account",
+      withdrawal: "Lucid Saga: withdrawal",
+    },
+    deletionBody:
+      "Hello,\n\nPlease delete my Lucid Saga account and its data.\n\nAccount email: [the email of your Lucid Saga account]\n\nPlease confirm when it’s done, and tell me about any data you must keep, why and for how long.\n\nThank you.",
+    titles: {
+      privacy: "Privacy Policy",
+      terms: "Terms and Conditions",
+      legal: "Legal notice",
+      "delete-account": "Delete account",
+    },
   },
   notFound: {
     title: "This path leads nowhere",

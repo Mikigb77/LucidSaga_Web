@@ -21,5 +21,8 @@ The game itself, and its requirements, are in [Mikigb77/PlayableAnime](https://g
    Never print secrets, tokens or players' data to logs.
 5. Say what the game does today. The site promises nothing the app doesn't do, and it stays
    "coming soon" until the Play listing is live. Google's Play badge is only for a live listing.
-6. Respect reduced motion: every animation must stop or settle under
+6. The legal pages say only what the app and the backend actually do. When either changes what data
+   it keeps, where it goes or who can see it, update `src/content/legal` in all three languages
+   and `company.version` ([docs/LEGAL.md](docs/LEGAL.md)).
+7. Respect reduced motion: every animation must stop or settle under
    `prefers-reduced-motion: reduce`.

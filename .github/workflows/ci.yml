@@ -52,7 +52,7 @@ jobs:
       - name: Smoke test
         run: |
           infra/deploy.sh smoke http://localhost:8080
-          for page in /es /ca /og/en.jpg /robots.txt /sitemap.xml /icon.png; do
+          for page in /es /ca /en/privacy /es/terms /ca/legal /en/delete-account /og/en.jpg /robots.txt /sitemap.xml /icon.png; do
             code=$(curl -s -o /dev/null -w '%{http_code}' "http://localhost:8080$page")
             test "$code" = 200 || { echo "::error::$page gave $code"; exit 1; }
           done

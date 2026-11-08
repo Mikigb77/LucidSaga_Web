@@ -38,17 +38,9 @@ describe("proxy", () => {
     expect(location.search).toBe("?ref=share");
   });
 
-  it("serves a localized page as is and remembers its language", () => {
-    const response = proxy(request("/es"));
+  it("serves a localized page as is, and sets no cookie", () => {
+    const response = proxy(request("/es/privacy", { "accept-language": "ca", cookie: "lang=en" }));
     expect(response.headers.get("location")).toBeNull();
-    const cookie = response.cookies.get("lang");
-    expect(cookie?.value).toBe("es");
-    expect(cookie?.secure).toBe(true);
-    expect(cookie?.maxAge).toBe(60 * 60 * 24 * 365);
-  });
-
-  it("sets no cookie when the language is already remembered", () => {
-    const response = proxy(request("/es", { cookie: "lang=es" }));
-    expect(response.cookies.get("lang")).toBeUndefined();
+    expect(response.headers.get("set-cookie")).toBeNull();
   });
 });

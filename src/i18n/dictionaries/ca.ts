@@ -139,9 +139,46 @@ export const ca: Dictionary = {
   },
   footer: {
     tagline: "Una història sense fi que recorda tot el que fas.",
-    rights: "© 2026 Lucid Saga",
+    rights: "© 2026 GARBAR, IN-TEC, S.L.",
     trademark: "Google Play és una marca de Google LLC.",
     languages: "Idiomes",
+    legal: "Informació legal",
+    support: "Suport",
+  },
+  legal: {
+    back: "Torna a Lucid Saga",
+    documents: "Documents legals",
+    contents: "En aquesta pàgina",
+    summary: "D’un cop d’ull",
+    inForce: "En vigor des del",
+    operator: "Titular",
+    taxId: "NIF",
+    address: "Domicili social",
+    register: "Registre Mercantil",
+    registration:
+      "Societat inscrita al Registre Mercantil de Barcelona, Tom 49105, Foli 130, Full 607875, Inscripció 1",
+    generalContact: "Consultes generals",
+    supportContact: "Suport, privadesa i eliminació",
+    write: "Escriu al suport",
+    deletion: "Escriu la sol·licitud d’eliminació",
+    withdrawal: "Envia un desistiment",
+    emailHelp:
+      "S’obre un correu perquè el revisis i l’enviïs. Si no s’obre res, envia’l des del teu correu habitual a aquesta adreça, amb aquest assumpte.",
+    recipient: "Per a",
+    subject: "Assumpte",
+    subjects: {
+      privacy: "Lucid Saga: consulta de privadesa o suport",
+      deletion: "Elimina el meu compte de Lucid Saga",
+      withdrawal: "Lucid Saga: desistiment",
+    },
+    deletionBody:
+      "Hola:\n\nUs demano que elimineu el meu compte de Lucid Saga i les seves dades.\n\nCorreu del compte: [el correu del teu compte de Lucid Saga]\n\nSi us plau, confirmeu-me quan estigui fet i indiqueu-me quines dades heu de conservar, per què i durant quant de temps.\n\nGràcies.",
+    titles: {
+      privacy: "Política de privadesa",
+      terms: "Termes i condicions",
+      legal: "Avís legal",
+      "delete-account": "Elimina el compte",
+    },
   },
   notFound: {
     title: "Aquest camí no porta enlloc",

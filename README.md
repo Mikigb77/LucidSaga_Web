@@ -33,6 +33,12 @@ else English (`src/proxy.ts`). The words are in `src/i18n/dictionaries`, the sta
 The one-time Google Cloud setup, the deploy itself and how to roll back are in
 [docs/DEPLOY.md](docs/DEPLOY.md).
 
+## Legal pages
+
+Privacy Policy, Terms and Conditions, Legal notice and account deletion, for GARBAR, IN-TEC, S.L.,
+at `/{lang}/privacy`, `/terms`, `/legal` and `/delete-account`. Where their facts come from, and
+what to check before the Play listing, is in [docs/LEGAL.md](docs/LEGAL.md).
+
 ## Pictures and fonts
 
 - The gate art, the world covers and the scene pictures are the game's own, cropped and converted

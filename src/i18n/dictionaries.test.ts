@@ -39,7 +39,7 @@ describe.each(locales)("the %s dictionary", (locale) => {
 
 describe("the translations", () => {
   it("are translated, apart from names", () => {
-    const names = new Set(["Google Play", "© 2026 Lucid Saga"]);
+    const names = new Set(["Google Play", "© 2026 GARBAR, IN-TEC, S.L."]);
     for (const locale of locales.filter((l) => l !== "en")) {
       const t = leaves(getDictionary(locale));
       const same = leaves(en).filter(
