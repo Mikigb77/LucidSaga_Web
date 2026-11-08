@@ -1,0 +1,91 @@
+.badge {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 22px 10px 16px;
+  border-radius: 14px;
+  background: linear-gradient(180deg, rgba(26, 31, 41, 0.92), rgba(11, 13, 18, 0.92));
+  box-shadow:
+    inset 0 0 0 1px rgba(237, 232, 223, 0.16),
+    0 10px 30px rgba(0, 0, 0, 0.45),
+    0 0 40px rgba(227, 182, 107, 0.12);
+  overflow: hidden;
+  isolation: isolate;
+}
+
+/* A slow glint across the badge. */
+.badge::after {
+  content: "";
+  position: absolute;
+  inset: -50% auto -50% -60%;
+  width: 40%;
+  background: linear-gradient(
+    100deg,
+    transparent,
+    rgba(246, 223, 168, 0.16) 45%,
+    rgba(246, 223, 168, 0.28) 50%,
+    rgba(246, 223, 168, 0.16) 55%,
+    transparent
+  );
+  transform: skewX(-18deg);
+  animation: glint 6s ease-in-out 1.5s infinite;
+  z-index: -1;
+}
+
+@keyframes glint {
+  0%,
+  70% {
+    left: -60%;
+  }
+  100% {
+    left: 130%;
+  }
+}
+
+.glyph {
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+  color: var(--gold);
+  filter: drop-shadow(0 0 10px rgba(227, 182, 107, 0.45));
+}
+
+.text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.1;
+}
+
+.small {
+  color: var(--text-2);
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.big {
+  margin-top: 3px;
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.lg {
+  padding: 14px 28px 14px 20px;
+  border-radius: 16px;
+}
+
+.lg .glyph {
+  width: 34px;
+  height: 34px;
+}
+
+.lg .small {
+  font-size: 11.5px;
+}
+
+.lg .big {
+  font-size: 24px;
+}
