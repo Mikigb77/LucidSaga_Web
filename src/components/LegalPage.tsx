@@ -13,7 +13,7 @@ import {
   type DocumentId,
 } from "@/content/legal";
 import { getDictionary, type Dictionary } from "@/i18n";
-import { locales, ogLocales, type Locale } from "@/i18n/locales";
+import { defaultLocale, locales, ogLocales, type Locale } from "@/i18n/locales";
 
 import styles from "./LegalPage.module.css";
 
@@ -22,12 +22,16 @@ export function legalMetadata(document: DocumentId, lang: Locale): Metadata {
   const t = getDictionary(lang);
   const doc = legalCopy[lang][document];
   const title = `${t.legal.titles[document]} · Lucid Saga`;
+  const image = { url: `/og/${lang}.jpg`, width: 1200, height: 630, alt: t.meta.ogAlt };
   return {
     title,
     description: doc.description,
     alternates: {
       canonical: legalPath(document, lang),
-      languages: Object.fromEntries(locales.map((l) => [l, legalPath(document, l)])),
+      languages: {
+        ...Object.fromEntries(locales.map((l) => [l, legalPath(document, l)])),
+        "x-default": legalPath(document, defaultLocale),
+      },
     },
     openGraph: {
       type: "website",
@@ -36,8 +40,10 @@ export function legalMetadata(document: DocumentId, lang: Locale): Metadata {
       description: doc.description,
       url: legalPath(document, lang),
       locale: ogLocales[lang],
-      images: [{ url: `/og/${lang}.jpg`, width: 1200, height: 630, alt: t.meta.ogAlt }],
+      alternateLocale: locales.filter((l) => l !== lang).map((l) => ogLocales[l]),
+      images: [image],
     },
+    twitter: { card: "summary_large_image", title, description: doc.description, images: [image] },
   };
 }
 

@@ -33,6 +33,9 @@ law before the Play listing goes live.
   Frankfurt, Neon in Frankfurt, and this site in `europe-west1` (Belgium).
 - **App paths and labels:** the app's strings (`app/lib/l10n/app_*.arb`): Account, Privacy and
   data, Export my data, Delete account, Delete my account, Dictation, This device.
+- **Minimum age:** 16 (Miki, 2026-11-08), so no parent's consent is needed anywhere in the EU;
+  under-17s still get Teen stories only (F8). 13 would need a parental-consent step for 13 to 15
+  year olds in much of the EU. The app's `MIN_SIGNUP_AGE` must say 16 too.
 - **Logs:** 30 days, Cloud Logging's default. **Backups:** Neon's restore window, not stated as a
   number.
 - **Purchases:** none yet (K3 to K5 are P1). The purchase and withdrawal clauses apply only once
@@ -42,8 +45,7 @@ law before the Play listing goes live.
 
 ## Before the Play listing
 
-- The minimum age: the pages say what `company.minimumAge` says, and the app's `MIN_SIGNUP_AGE`
-  must match it.
+- The app's `MIN_SIGNUP_AGE` must match `company.minimumAge` (16).
 - The app shows its own copy of the privacy policy (PlayableAnime `app/assets/legal`), still with
   placeholders. Make it match these pages, or link to them.
 - When purchases arrive, check the purchase, renewal and withdrawal sections against the real

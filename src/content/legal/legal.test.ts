@@ -1,3 +1,5 @@
+import { existsSync } from "node:fs";
+
 import { describe, expect, it } from "vitest";
 
 import { locales } from "@/i18n/locales";
@@ -83,6 +85,12 @@ describe.each(locales)("the %s legal documents", (locale) => {
 
   it("write the date out", () => {
     expect(versionDate(locale)).toMatch(/2026/);
+  });
+});
+
+describe("routes", () => {
+  it.each(documents)("%s has a page", (document) => {
+    expect(existsSync(`src/app/[lang]/${document}/page.tsx`)).toBe(true);
   });
 });
 

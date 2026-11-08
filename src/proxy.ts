@@ -1,6 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 
-import { defaultLocale, hasLocale, localeCookie, negotiateLocale } from "@/i18n/locales";
+import { defaultLocale, hasLocale, localeCookie, localizedPath, negotiateLocale } from "@/i18n/locales";
 
 /**
  * Sends a visitor without a language in the path to one: the language they picked before in the
@@ -16,7 +16,7 @@ export function proxy(request: NextRequest) {
     ? remembered
     : (negotiateLocale(request.headers.get("accept-language")) ?? defaultLocale);
   const url = request.nextUrl.clone();
-  url.pathname = `/${locale}${pathname === "/" ? "" : pathname}`;
+  url.pathname = localizedPath(pathname, locale);
   url.search = search;
   const response = NextResponse.redirect(url, 307);
   response.headers.set("Vary", "Accept-Language, Cookie");

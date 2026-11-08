@@ -139,7 +139,8 @@ cmd_service() {
 
 # GETs $1 and prints the status code, saving the body to $2. Prints 000 when there is no answer.
 http_get() {
-  curl -sS -o "$2" -w '%{http_code}' --max-time 10 "$1" 2>/dev/null || printf '000'
+  # curl prints 000 itself when it can't connect.
+  curl -sS -o "$2" -w '%{http_code}' --max-time 10 "$1" 2>/dev/null || true
 }
 
 cmd_smoke() {
@@ -181,10 +182,15 @@ cmd_rollback() {
 cmd_laptop() {
   local tag ref digest previous
   command -v docker >/dev/null 2>&1 || die "Docker isn't installed here; deploy through GitHub Actions instead"
-  tag="$(git -C "$ROOT" rev-parse --short=12 HEAD)"
   if [ -n "$(git -C "$ROOT" status --porcelain)" ]; then
     die "the working tree has changes; deploy only committed code"
   fi
+  # The same rule as the workflow: only what is on main, which CI checked before the merge.
+  run git -C "$ROOT" fetch --quiet origin main
+  if [ "$(git -C "$ROOT" rev-parse HEAD)" != "$(git -C "$ROOT" rev-parse origin/main)" ]; then
+    die "HEAD isn't origin/main; check out main and pull it, then deploy"
+  fi
+  tag="$(git -C "$ROOT" rev-parse --short=12 HEAD)"
   ref="$IMAGE:$tag"
   step "Building $ref"
   run docker build --platform=linux/amd64 --build-arg "SITE_URL=$SITE_URL" -t "$ref" "$ROOT"
@@ -195,13 +201,15 @@ cmd_laptop() {
   else
     digest="$(docker inspect --format='{{index .RepoDigests 0}}' "$ref")"
   fi
-  GITHUB_OUTPUT="$TMP_DIR/outputs" cmd_service "${digest:-$ref}"
-  previous="$(sed -n 's/^previous_revision=//p' "$TMP_DIR/outputs" 2>/dev/null || true)"
-  if ! cmd_smoke "$SITE_URL"; then
+  # Each step runs as its own process, so it stops at its first error (set -e) and a failure
+  # comes back here to roll back. A subshell in an if wouldn't stop: bash ignores set -e there.
+  if ! GITHUB_OUTPUT="$TMP_DIR/outputs" "$HERE/deploy.sh" service "${digest:-$ref}" ||
+    ! "$HERE/deploy.sh" smoke "$SITE_URL"; then
+    previous="$(sed -n 's/^previous_revision=//p' "$TMP_DIR/outputs" 2>/dev/null || true)"
     if [ -n "$previous" ]; then
       cmd_rollback "$previous"
     fi
-    die "the new revision failed its smoke test"
+    die "the new revision failed to deploy or failed its smoke test"
   fi
 }
 
