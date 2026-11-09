@@ -30,6 +30,10 @@ sets up, or brings back in line (it is safe to run again):
 
 Nothing else is needed: no GitHub secrets or variables.
 
+New permissions take a few minutes to reach every part of Google Cloud. A deploy that starts
+right after the bootstrap can fail at the sign-in with `iam.serviceAccounts.getAccessToken`
+denied; re-run it a few minutes later. The first deploy did exactly that (2026-11-08).
+
 ## Every change
 
 1. Open a PR into `dev`. CI must pass: formatting, lint, types, unit tests and the build (`web`),
