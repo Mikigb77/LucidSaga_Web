@@ -24,7 +24,7 @@ law before the Play listing goes live.
   registered address and registry entry. Miki confirmed it is the same company (2026-11-08).
 - **Contacts:** `lucidsaga@garbar.tech` for general enquiries and `lucidsaga.support@garbar.tech`
   for support, privacy and deletion, following TaskFlow's `taskflow@` and `taskflow.support@`.
-  They must exist as aliases of the company mailbox before the pages go live.
+  Both exist as aliases of the company mailbox (Miki, 2026-11-09).
 - **Data and processors:** PlayableAnime's draft `docs/PRIVACY.md`, `docs/API.md`
   (`/v1/me/export`, `DELETE /v1/me`) and the requirements they cite: accounts and sign-in (T8),
   age (F8), reports (F6), content settings (F7), credits (K1 to K8), dictation (V5, V6), reading
