@@ -2,8 +2,9 @@
   position: relative;
   display: flex;
   align-items: center;
-  /* A little short of the screen, so the gold band below peeks in as a cue to scroll. */
-  min-height: clamp(660px, calc(100svh - 56px), 1040px);
+  /* At least the whole screen, however tall, so the gate has the first view to itself and the
+     gold band below only comes in on scroll. */
+  min-height: max(660px, 100svh);
   padding-top: var(--header-h);
   padding-bottom: 48px;
   overflow: hidden;
