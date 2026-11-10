@@ -6,8 +6,8 @@
 # release waits 7 days before it is offered, so a broken or hijacked release is usually pulled
 # before it reaches us.
 #
-# Updates are checked early on Monday (05:00 Madrid time), so their PRs and CI are done before
-# the weekly Dependabot pass at 07:39, which merges the green ones (docs/DEPLOY.md#dependabot).
+# Updates are checked early on Monday (04:00 Madrid time), so their PRs and CI are done before
+# the weekly Dependabot pass at 06:09, which merges the green ones (docs/DEPLOY.md#dependabot).
 version: 2
 
 updates:
@@ -18,7 +18,7 @@ updates:
     schedule:
       interval: weekly
       day: monday
-      time: "05:00"
+      time: "04:00"
       timezone: Europe/Madrid
     cooldown:
       default-days: 7
@@ -48,7 +48,7 @@ updates:
     schedule:
       interval: weekly
       day: monday
-      time: "05:00"
+      time: "04:00"
       timezone: Europe/Madrid
     cooldown:
       default-days: 7
@@ -64,7 +64,7 @@ updates:
     schedule:
       interval: weekly
       day: monday
-      time: "05:00"
+      time: "04:00"
       timezone: Europe/Madrid
     cooldown:
       default-days: 7
