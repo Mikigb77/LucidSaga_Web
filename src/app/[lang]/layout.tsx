@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { notFound } from "next/navigation";
 
+import { CursorGlow } from "@/components/CursorGlow";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 import { RevealObserver } from "@/components/RevealObserver";
@@ -77,6 +78,7 @@ export default async function LangLayout({ children, params }: LayoutProps<"/[la
         {children}
         <Footer t={t} lang={lang} />
         <RevealObserver />
+        <CursorGlow />
       </body>
     </html>
   );

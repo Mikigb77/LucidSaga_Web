@@ -145,6 +145,7 @@ export const es: Dictionary = {
     legal: "Información legal",
     support: "Soporte",
     sections: "En esta web",
+    family: "Más de GarBar",
     maker: "Un producto de",
     backToTop: "Volver arriba",
   },

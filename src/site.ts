@@ -10,3 +10,11 @@ export const siteUrl = (process.env.SITE_URL || "http://localhost:3000").replace
 export function garbarUrl(lang: Locale) {
   return `https://garbar.tech/${lang}/`;
 }
+
+/**
+ * TaskFlow, GarBar's other app, in a language, as garbar.tech links it. Its English page is the
+ * bare address, which otherwise follows the visitor's browser, so the link says English.
+ */
+export function taskflowUrl(lang: Locale) {
+  return lang === "en" ? "https://taskflow.garbar.tech/?lang=en" : `https://taskflow.garbar.tech/${lang}/`;
+}
