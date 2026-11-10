@@ -9,8 +9,9 @@ SOURCES_DIR holds what the site draws on, none of it kept in this repo:
   dark band for the app's title, where the model sometimes writes words of its own, so only the
   top 68 % is kept.
 - gate.png: the forest gate painting behind the app icon, the panel the icon shows, upscaled 4x
-  with Real-ESRGAN to 2336 x 2336 (scripts/upscale.py says how). The hero shows it up to 1000 px
-  wide, so a retina screen needs 2000 px.
+  with Real-ESRGAN (scripts/upscale.py) and then repainted at 4096 x 4096 by Gemini with a better
+  drawn traveller (scripts/repaint.py says how). The hero shows it up to 1000 px wide, so a
+  retina screen needs 2000 px.
 - popup-world.png: a book that opens into a world, from the same round of paintings.
 - scenes/<name>.jpg: scene pictures in the house style (1376 x 768).
 - icon.png: the app's launcher icon at 512 px (PlayableAnime app/web/icons/Icon-512.png).
