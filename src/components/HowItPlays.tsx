@@ -4,6 +4,7 @@ import wellAtDusk from "@/assets/scenes/well-at-dusk.webp";
 import { accentFor } from "@/content/accent";
 import type { Dictionary } from "@/i18n";
 
+import { Eyebrow } from "./Eyebrow";
 import styles from "./HowItPlays.module.css";
 import { PlayDemo } from "./PlayDemo";
 
@@ -17,7 +18,7 @@ export function HowItPlays({ t }: { t: Dictionary }) {
           </div>
           <div>
             <div data-reveal>
-              <p className="eyebrow">{t.how.eyebrow}</p>
+              <Eyebrow n="01">{t.how.eyebrow}</Eyebrow>
               <h2 id="how-title" className="section-title">
                 {t.how.title}
               </h2>

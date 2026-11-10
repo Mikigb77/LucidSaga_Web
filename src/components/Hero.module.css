@@ -2,7 +2,8 @@
   position: relative;
   display: flex;
   align-items: center;
-  min-height: clamp(660px, 100svh, 1040px);
+  /* A little short of the screen, so the gold band below peeks in as a cue to scroll. */
+  min-height: clamp(660px, calc(100svh - 56px), 1040px);
   padding-top: var(--header-h);
   padding-bottom: 48px;
   overflow: hidden;
@@ -155,21 +156,26 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 18px 26px;
+  gap: 14px 16px;
   margin-top: 36px;
 }
 
+/* A ghost button beside the badge, in the pill shape the other GarBar sites use. */
 .secondary {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
+  min-height: 56px;
+  padding: 0 24px;
+  border: 1px solid rgba(237, 232, 223, 0.22);
+  border-radius: 999px;
+  background: rgba(17, 20, 27, 0.4);
   color: var(--text);
   font-weight: 500;
   text-decoration: none;
-  border-bottom: 1px solid rgba(237, 232, 223, 0.3);
-  padding-bottom: 2px;
   transition:
     border-color 0.2s ease,
+    background-color 0.2s ease,
     color 0.2s ease;
 }
 
@@ -180,8 +186,9 @@
 }
 
 .secondary:hover {
+  border-color: rgba(227, 182, 107, 0.6);
+  background: rgba(227, 182, 107, 0.08);
   color: var(--gold-hi);
-  border-color: var(--gold);
 }
 
 .secondary:hover svg {
@@ -250,13 +257,15 @@
     animation-name: arrive-narrow;
   }
 
+  /* Stops in lengths, not percentages of the hero: a taller hero (a longer translation, a
+     narrower phone) pushed a percentage stop past the last one and cut the gate off hard. */
   .fade {
     background: linear-gradient(
       180deg,
-      rgba(11, 13, 18, 0.35) 0%,
-      rgba(11, 13, 18, 0) 20%,
-      rgba(11, 13, 18, 0) 38%,
-      var(--ink) min(96vw, 690px)
+      rgba(11, 13, 18, 0.35) 0,
+      rgba(11, 13, 18, 0) calc(var(--header-h) + 8vw),
+      rgba(11, 13, 18, 0) calc(var(--header-h) + min(56vw, 400px)),
+      var(--ink) calc(var(--header-h) + min(78vw, 560px) + 8px)
     );
   }
 

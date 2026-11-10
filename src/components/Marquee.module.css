@@ -1,0 +1,91 @@
+.marquee {
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+  padding-block: 16px;
+  background: linear-gradient(
+    90deg,
+    var(--gold-lo) 0%,
+    var(--gold) 22%,
+    var(--gold-hi) 50%,
+    var(--gold) 78%,
+    var(--gold-lo) 100%
+  );
+  color: var(--ink);
+  box-shadow: 0 0 70px rgba(227, 182, 107, 0.2);
+}
+
+.track {
+  display: flex;
+  width: max-content;
+  animation: slide 52s linear infinite;
+}
+
+.row {
+  display: flex;
+  flex: none;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.row li {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+  padding-right: 30px;
+  font-family: var(--font-display), Georgia, serif;
+  font-size: clamp(1.25rem, 1rem + 1vw, 1.85rem);
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+}
+
+.star {
+  width: 0.55em;
+  height: 0.55em;
+  flex: none;
+  fill: currentColor;
+  opacity: 0.75;
+}
+
+@keyframes slide {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@media (max-width: 640px) {
+  .marquee {
+    padding-block: 12px;
+  }
+
+  .row li {
+    gap: 22px;
+    padding-right: 22px;
+  }
+}
+
+/* Under reduced motion the band holds still, its phrases wrapped and centred. */
+@media (prefers-reduced-motion: reduce) {
+  .track {
+    width: auto;
+    animation: none;
+  }
+
+  .row {
+    flex: 1;
+    flex-wrap: wrap;
+    justify-content: center;
+    row-gap: 4px;
+    padding-inline: var(--gutter);
+  }
+
+  .row[data-copy] {
+    display: none;
+  }
+
+  .row li:last-child .star {
+    display: none;
+  }
+}

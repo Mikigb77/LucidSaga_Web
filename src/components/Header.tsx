@@ -13,7 +13,7 @@ export function Header({ t, lang }: { t: Dictionary; lang: Locale }) {
   const home = `/${lang}`;
   return (
     <header className={styles.header} data-header>
-      <div className={`container ${styles.inner}`}>
+      <div className={styles.inner}>
         <Link href={home} className={styles.brand} aria-label={t.nav.home}>
           <Image src={icon} alt="" width={34} height={34} className={styles.icon} priority />
           <span className={styles.wordmark}>Lucid Saga</span>
@@ -25,7 +25,10 @@ export function Header({ t, lang }: { t: Dictionary; lang: Locale }) {
         </nav>
         <div className={styles.end}>
           <LanguageSwitcher current={lang} label={t.nav.language} />
-          <span className={styles.soon}>{t.badge.label}</span>
+          <span className={styles.soon}>
+            <span className={styles.dot} aria-hidden="true" />
+            {t.badge.label}
+          </span>
         </div>
       </div>
       <HeaderScroll />

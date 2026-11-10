@@ -144,6 +144,9 @@ export const es: Dictionary = {
     languages: "Idiomas",
     legal: "Información legal",
     support: "Soporte",
+    sections: "En esta web",
+    maker: "Un producto de",
+    backToTop: "Volver arriba",
   },
   legal: {
     back: "Volver a Lucid Saga",
