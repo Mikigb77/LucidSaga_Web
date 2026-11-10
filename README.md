@@ -43,8 +43,9 @@ what to check before the Play listing, is in [docs/LEGAL.md](docs/LEGAL.md).
 
 - The gate art, the world covers and the scene pictures are the game's own, cropped and converted
   by `scripts/prepare_images.py`. The gate is the app icon's painting, upscaled 4x with
-  Real-ESRGAN (`scripts/upscale.py`) and repainted at 4K by Gemini on Vertex AI with a better
-  drawn traveller (`scripts/repaint.py`), so it stays sharp on retina screens.
+  Real-ESRGAN (`scripts/upscale.py`) and repainted at 4K by Gemini on Vertex AI, in a darker
+  forest with a better drawn traveller (`scripts/repaint.py`), so it stays sharp on retina
+  screens.
 - Link previews (`public/og/*.jpg`) are drawn from the hero's words by `scripts/og-images.mjs`.
 - Fonts are Inter and Literata (SIL Open Font License, in `src/fonts`), subset by
   `scripts/subset-fonts.sh`.
