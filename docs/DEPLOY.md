@@ -70,10 +70,30 @@ Alerts and security updates are switched on in the repository's settings, not in
 2026-11-10; `gh api repos/Mikigb77/LucidSaga_Web/automated-security-fixes` shows whether they still
 are). CI's `web` job reads its Node image from the `Dockerfile`, so an update of the image's Node is
 checked on the new Node. Dependabot checks early on Monday (04:00 Madrid time), and a scheduled
-Claude pass at 06:09 works through its PRs (Miki, 2026-11-10) and posts a summary in the project by
-08:00. A Dependabot PR is merged like any other: CI must be green, a major update needs a look at
-its changelog, and it is squash-merged into `dev`, then reaches the site with the next deploy. If CI
-fails, the fix goes on the Dependabot branch or the update is closed with the reason.
+Claude pass at 06:09 works through its PRs (Miki, 2026-11-10). A Dependabot PR is merged like any
+other: CI must be green, a major update needs a look at its changelog, and it is squash-merged into
+`dev`, then reaches the site with the next deploy. If CI fails, the fix goes on the Dependabot
+branch or the update is closed with the reason.
+
+### The weekly report
+
+By 08:00 Madrid time the pass files one GitHub issue in each repository that has something to
+report, labelled `dependabot-report` and assigned to Miki, so one search lists every open report:
+[label:dependabot-report assignee:Mikigb77](https://github.com/issues?q=is%3Aopen+is%3Aissue+label%3Adependabot-report+assignee%3AMikigb77).
+A week with no Dependabot PR to handle, no new or changed alert and nothing merged, closed or
+deployed files nothing. The title and an `urgency:` label say how soon it needs Miki:
+
+- **high**, act today: something that ships is exposed or broken. An alert on a dependency that
+  ships is still open after the pass, a deploy or rollback failed, or `dev` or `main` is red because
+  of an update.
+- **medium**, decide this week: something only Miki can decide is waiting, such as a major update
+  that changes behavior, cost or licence, or a red update with no clear fix.
+- **low**, for the record: updates were merged, closed or deployed, and nothing needs Miki.
+
+The report opens with what Miki needs to do, then lists what merged, closed (with the reason),
+deployed or is still pending, and any new alert, with links. An alert already reported and unchanged
+isn't repeated. Work still running at 08:00 is finished afterwards and added as a comment. The next
+week's report closes a low one; a high or medium report stays open until what it asks for is done.
 
 ## From a laptop
 
