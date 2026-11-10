@@ -69,10 +69,11 @@ the workflows' actions. It is free, and stays free if the repository goes privat
 Alerts and security updates are switched on in the repository's settings, not in the file (since
 2026-11-10; `gh api repos/Mikigb77/LucidSaga_Web/automated-security-fixes` shows whether they still
 are). CI's `web` job reads its Node image from the `Dockerfile`, so an update of the image's Node is
-checked on the new Node. A Dependabot PR is merged like any other: CI must be green, a major update
-needs a look at its changelog, and it is squash-merged into `dev`, then reaches the site with the
-next deploy. If CI fails, the fix goes on the Dependabot branch or the update is closed with the
-reason.
+checked on the new Node. Dependabot checks early on Monday (04:00 Madrid time), and a scheduled
+Claude pass at 06:09 works through its PRs (Miki, 2026-11-10) and posts a summary in the project by
+08:00. A Dependabot PR is merged like any other: CI must be green, a major update needs a look at
+its changelog, and it is squash-merged into `dev`, then reaches the site with the next deploy. If CI
+fails, the fix goes on the Dependabot branch or the update is closed with the reason.
 
 ## From a laptop
 
