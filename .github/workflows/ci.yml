@@ -15,11 +15,29 @@ concurrency:
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
+  # The Node image the site runs on, read from the Dockerfile, so the web job checks the site on the
+  # same Node, and a Dependabot update of the Dockerfile's Node is checked on the new one.
+  node-image:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    outputs:
+      image: ${{ steps.read.outputs.image }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - id: read
+        run: |
+          image=$(awk '$1 == "FROM" && $2 ~ /^node:/ { print $2; exit }' Dockerfile)
+          test -n "$image" || { echo "::error::The Dockerfile has no FROM node line."; exit 1; }
+          echo "image=$image" >>"$GITHUB_OUTPUT"
+
   # Formatting, lint, types, unit tests and the production build, on the Node the image runs.
   web:
+    needs: node-image
     runs-on: ubuntu-24.04
     timeout-minutes: 15
-    container: node:22.23.4-bookworm-slim
+    container: ${{ needs.node-image.outputs.image }}
     env:
       NEXT_TELEMETRY_DISABLED: "1"
     steps:
