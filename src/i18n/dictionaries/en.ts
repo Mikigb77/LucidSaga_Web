@@ -147,7 +147,6 @@ export const en = {
     legal: "Legal",
     support: "Support",
     sections: "On this site",
-    family: "More from GarBar",
     maker: "A product by",
     backToTop: "Back to top",
   },

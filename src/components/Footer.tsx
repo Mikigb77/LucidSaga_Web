@@ -34,6 +34,7 @@ export function Footer({ t, lang }: { t: Dictionary; lang: Locale }) {
           </p>
         </div>
         <div className={styles.columns}>
+          {/* Named "On this site", not by its heading, as the header's nav is "Lucid Saga". */}
           <nav aria-label={t.footer.sections}>
             <p className={styles.heading}>Lucid Saga</p>
             <a href={`${home}#how`}>{t.nav.how}</a>
@@ -41,8 +42,10 @@ export function Footer({ t, lang }: { t: Dictionary; lang: Locale }) {
             <a href={`${home}#worlds`}>{t.nav.worlds}</a>
           </nav>
           {/* GarBar and its other products, as TaskFlow's footer lists GarBar and Lucid Saga. */}
-          <nav aria-label={t.footer.family}>
-            <p className={styles.heading}>GarBar</p>
+          <nav aria-labelledby="footer-garbar">
+            <p id="footer-garbar" className={styles.heading}>
+              GarBar
+            </p>
             <a href={garbarUrl(lang)} hrefLang={lang}>
               <GarBarMark />
               garbar.tech
@@ -54,8 +57,10 @@ export function Footer({ t, lang }: { t: Dictionary; lang: Locale }) {
               <Away />
             </a>
           </nav>
-          <nav aria-label={t.footer.legal}>
-            <p className={styles.heading}>{t.footer.legal}</p>
+          <nav aria-labelledby="footer-legal">
+            <p id="footer-legal" className={styles.heading}>
+              {t.footer.legal}
+            </p>
             {documents.map((document) => (
               <a key={document} href={legalPath(document, lang)}>
                 {t.legal.titles[document]}
