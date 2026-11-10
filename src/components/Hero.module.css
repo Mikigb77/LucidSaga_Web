@@ -240,33 +240,36 @@
   }
 }
 
-/* Phones and narrow tablets: the gate above, the words below it. */
+/* Phones and narrow tablets: the gate above, the words below it. The whole gate and the traveller,
+   feet and all, fill the top four fifths of the painting, so the words start just below them. */
 @media (max-width: 900px) {
   .hero {
+    --art: min(128vw, 760px);
     align-items: flex-end;
     min-height: auto;
-    padding-top: calc(var(--header-h) + min(78vw, 560px));
+    padding-top: calc(var(--header-h) + 0.76 * var(--art));
     padding-bottom: 56px;
   }
 
   .art {
-    top: calc(var(--header-h) - 14vw);
+    top: calc(var(--header-h) - 0.1 * var(--art));
     right: auto;
     left: 50%;
-    width: min(150vw, 980px);
+    width: var(--art);
     transform: translateX(-50%);
     animation-name: arrive-narrow;
   }
 
   /* Stops in lengths, not percentages of the hero: a taller hero (a longer translation, a
-     narrower phone) pushed a percentage stop past the last one and cut the gate off hard. */
+     narrower phone) pushed a percentage stop past the last one and cut the gate off hard. The
+     dark comes in from the traveller's knees, so the path fades out under their feet. */
   .fade {
     background: linear-gradient(
       180deg,
       rgba(11, 13, 18, 0.35) 0,
       rgba(11, 13, 18, 0) calc(var(--header-h) + 8vw),
-      rgba(11, 13, 18, 0) calc(var(--header-h) + min(56vw, 400px)),
-      var(--ink) calc(var(--header-h) + min(78vw, 560px) + 8px)
+      rgba(11, 13, 18, 0) calc(var(--header-h) + 0.6 * var(--art)),
+      var(--ink) calc(var(--header-h) + 0.8 * var(--art))
     );
   }
 
