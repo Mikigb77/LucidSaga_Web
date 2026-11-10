@@ -20,6 +20,10 @@ updates:
       # Node's types follow the Node the site runs on (22, as the Dockerfile says).
       - dependency-name: "@types/node"
         update-types: ["version-update:semver-major"]
+      # typescript-eslint, which eslint-config-next runs, refuses TypeScript 7 for now
+      # (typescript-eslint/typescript-eslint#10940). Lift this once it supports it.
+      - dependency-name: typescript
+        versions: [">= 7"]
     groups:
       # Packages that only work at the same version move together, majors included.
       next:

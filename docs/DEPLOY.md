@@ -63,7 +63,8 @@ the workflows' actions. It is free, and stays free if the repository goes privat
   once a week. Next.js and `eslint-config-next` move together, as do React and its types; the
   other minor and patch updates share one PR per ecosystem, and each major update gets its own. A
   release waits 7 days before it is offered, so a broken or hijacked release is usually pulled
-  first. Security updates never wait. A new major Node (and its `@types/node`) is a PR of its own.
+  first. Security updates never wait. A new major Node (and its `@types/node`) is a PR of its own,
+  and TypeScript 7 waits until typescript-eslint, which `eslint-config-next` runs, supports it.
 
 Alerts and security updates are switched on in the repository's settings, not in the file (since
 2026-11-10; `gh api repos/Mikigb77/LucidSaga_Web/automated-security-fixes` shows whether they still
