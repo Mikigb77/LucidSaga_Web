@@ -1,7 +1,7 @@
 """Upscales a picture 4x with Real-ESRGAN, on the CPU, for when a source is smaller than the site
-shows it. The hero's gate was made with it (scripts/prepare_images.py, gate.png):
+shows it. The hero's gate starts with it, before scripts/repaint.py paints it again at 4K:
 
-    python3 scripts/upscale.py forest-gate.jpg RealESRGAN_x4plus.pth gate.png --crop 225,228,584
+    python3 scripts/upscale.py forest-gate.jpg RealESRGAN_x4plus.pth gate-x4.png --crop 225,228,584
 
 - forest-gate.jpg is the app icon's painting (PlayableAnime app/tool/app_icon/forest-gate.jpg).
   Gemini painted the scene on an inner panel of the 1024 px square, and --crop takes that panel:

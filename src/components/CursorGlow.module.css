@@ -1,20 +1,20 @@
 /* A soft gold light centred on the mouse (CursorGlow.tsx). It lies over the page's sections, under
    the header's glass, without catching the pointer, and is faint enough that the words under it
-   keep their colour. */
+   keep their colour: wide, with a dim centre that fades out gently. */
 .glow {
   position: fixed;
   top: 0;
   left: 0;
   z-index: 40;
-  width: 480px;
-  height: 480px;
-  margin: -240px 0 0 -240px;
+  width: 520px;
+  height: 520px;
+  margin: -260px 0 0 -260px;
   border-radius: 50%;
   background: radial-gradient(
     closest-side,
-    rgba(246, 223, 168, 0.2),
-    rgba(227, 182, 107, 0.09) 40%,
-    rgba(227, 182, 107, 0.03) 70%,
+    rgba(246, 223, 168, 0.15),
+    rgba(227, 182, 107, 0.068) 38%,
+    rgba(227, 182, 107, 0.024) 68%,
     rgba(227, 182, 107, 0) 100%
   );
   pointer-events: none;
