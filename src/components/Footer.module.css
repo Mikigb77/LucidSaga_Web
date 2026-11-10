@@ -174,9 +174,10 @@
   transform: translateY(-3px);
 }
 
-/* The name in gold outline, cut off by the bottom of the page, as the other GarBar sites end. */
+/* The name in gold outline, cut off by the bottom of the page, as the other GarBar sites end. The
+   cut and the fade leave a little over half of each letter, enough to read the name. */
 .wordmark {
-  height: 0.68em;
+  height: 0.74em;
   margin-top: 28px;
   overflow: hidden;
   font-family: var(--font-display), Georgia, serif;
@@ -187,8 +188,8 @@
   white-space: nowrap;
   color: transparent;
   -webkit-text-stroke: 1px rgba(227, 182, 107, 0.38);
-  -webkit-mask-image: linear-gradient(180deg, #000 40%, transparent 100%);
-  mask-image: linear-gradient(180deg, #000 40%, transparent 100%);
+  -webkit-mask-image: linear-gradient(180deg, #000 58%, transparent 100%);
+  mask-image: linear-gradient(180deg, #000 58%, transparent 100%);
   user-select: none;
   pointer-events: none;
 }
