@@ -51,6 +51,28 @@ denied; re-run it a few minutes later. The first deploy did exactly that (2026-1
 The Deploy workflow can also be started by hand on `main` (Actions, Deploy, Run workflow): with
 "Dry run" ticked it signs in, checks the setup and builds the image, and only prints the rest.
 
+## Dependabot
+
+Dependabot watches the site's npm packages, the image's Node (both stages of the `Dockerfile`) and
+the workflows' actions. It is free, and stays free if the repository goes private.
+
+- **Alerts** list each known vulnerability under the repository's Security tab.
+- **Security updates** open a PR into `dev`, the default branch, as soon as an advisory affects a
+  package and a fixed version exists.
+- **Version updates** ([`.github/dependabot.yml`](../.github/dependabot.yml)) open PRs into `dev`
+  once a week. Next.js and `eslint-config-next` move together, as do React and its types; the
+  other minor and patch updates share one PR per ecosystem, and each major update gets its own. A
+  release waits 7 days before it is offered, so a broken or hijacked release is usually pulled
+  first. Security updates never wait. A new major Node (and its `@types/node`) is a PR of its own.
+
+Alerts and security updates are switched on in the repository's settings, not in the file (since
+2026-11-10; `gh api repos/Mikigb77/LucidSaga_Web/automated-security-fixes` shows whether they still
+are). CI's `web` job reads its Node image from the `Dockerfile`, so an update of the image's Node is
+checked on the new Node. A Dependabot PR is merged like any other: CI must be green, a major update
+needs a look at its changelog, and it is squash-merged into `dev`, then reaches the site with the
+next deploy. If CI fails, the fix goes on the Dependabot branch or the update is closed with the
+reason.
+
 ## From a laptop
 
 With Docker and gcloud signed in to the project, `infra/deploy.sh laptop` builds, pushes, deploys
