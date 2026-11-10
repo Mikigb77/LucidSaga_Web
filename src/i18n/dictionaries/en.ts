@@ -146,6 +146,9 @@ export const en = {
     languages: "Languages",
     legal: "Legal",
     support: "Support",
+    sections: "On this site",
+    maker: "A product by",
+    backToTop: "Back to top",
   },
   legal: {
     back: "Back to Lucid Saga",
