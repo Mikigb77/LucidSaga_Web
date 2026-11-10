@@ -1,0 +1,35 @@
+/* A soft gold light centred on the mouse (CursorGlow.tsx). It lies over the page's sections, under
+   the header's glass, without catching the pointer, and is faint enough that the words under it
+   keep their colour. */
+.glow {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 40;
+  width: 480px;
+  height: 480px;
+  margin: -240px 0 0 -240px;
+  border-radius: 50%;
+  background: radial-gradient(
+    closest-side,
+    rgba(246, 223, 168, 0.2),
+    rgba(227, 182, 107, 0.09) 40%,
+    rgba(227, 182, 107, 0.03) 70%,
+    rgba(227, 182, 107, 0) 100%
+  );
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+}
+
+.glow[data-on] {
+  opacity: 1;
+  will-change: transform;
+}
+
+/* Only for a mouse or a trackpad, and never for visitors who ask for reduced motion. */
+@media (hover: none), (pointer: coarse), (prefers-reduced-motion: reduce) {
+  .glow {
+    display: none;
+  }
+}
