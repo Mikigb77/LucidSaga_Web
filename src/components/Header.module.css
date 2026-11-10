@@ -153,6 +153,13 @@
   }
 }
 
+/* The smallest phones: the name and the languages still fit inside the bar. */
+@media (max-width: 380px) {
+  .inner {
+    gap: 12px;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .dot::after {
     animation: none;

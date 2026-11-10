@@ -1,5 +1,8 @@
+/* Clipped sideways: the phone's glow reaches past the screen's edge on a phone, and a page wider
+   than the screen lets the browser slide it sideways and drags the fixed header off the edge. */
 .section {
   position: relative;
+  overflow-x: clip;
   padding-block: clamp(88px, 11vw, 150px);
   background:
     radial-gradient(50% 40% at 20% 50%, rgba(92, 201, 167, 0.07), transparent 70%),
