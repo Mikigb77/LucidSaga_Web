@@ -144,6 +144,9 @@ export const ca: Dictionary = {
     languages: "Idiomes",
     legal: "Informació legal",
     support: "Suport",
+    sections: "En aquest web",
+    maker: "Un producte de",
+    backToTop: "Torna a dalt",
   },
   legal: {
     back: "Torna a Lucid Saga",

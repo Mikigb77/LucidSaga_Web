@@ -7,6 +7,7 @@ import { worlds, type World } from "@/content/worlds";
 import type { Dictionary } from "@/i18n";
 import type { Locale } from "@/i18n/locales";
 
+import { Eyebrow } from "./Eyebrow";
 import styles from "./Worlds.module.css";
 
 function Cover({
@@ -50,7 +51,7 @@ export function Worlds({ t, lang }: { t: Dictionary; lang: Locale }) {
     <section id="worlds" className={styles.section} aria-labelledby="worlds-title">
       <div className="container">
         <div className={styles.head} data-reveal>
-          <p className="eyebrow">{t.worlds.eyebrow}</p>
+          <Eyebrow n="03">{t.worlds.eyebrow}</Eyebrow>
           <h2 id="worlds-title" className="section-title">
             {t.worlds.title}
           </h2>

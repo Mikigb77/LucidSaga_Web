@@ -4,27 +4,38 @@ import icon from "@/assets/icon-96.png";
 import { company, documents, legalPath } from "@/content/legal";
 import type { Dictionary } from "@/i18n";
 import { localeNames, locales, type Locale } from "@/i18n/locales";
+import { garbarUrl } from "@/site";
 
 import styles from "./Footer.module.css";
 import { LanguageLink } from "./LanguageLink";
 
+/**
+ * The footer the other GarBar product sites share: the brand and who makes it, the page's
+ * sections, the legal links, then languages and a way back up, over the name in outline.
+ */
 export function Footer({ t, lang }: { t: Dictionary; lang: Locale }) {
+  const home = `/${lang}`;
   return (
     <footer className={styles.footer}>
-      <div className={`container ${styles.inner}`}>
-        <div className={styles.brand}>
-          <Image src={icon} alt="" width={40} height={40} className={styles.icon} />
-          <div>
-            <p className={styles.name}>Lucid Saga</p>
-            <p className={styles.tagline}>{t.footer.tagline}</p>
-          </div>
+      <div className={`container ${styles.top}`}>
+        <div>
+          <a href={home} className={styles.brand} aria-label={t.nav.home}>
+            <Image src={icon} alt="" width={40} height={40} className={styles.icon} />
+            <span className={styles.name}>Lucid Saga</span>
+          </a>
+          <p className={styles.tagline}>{t.footer.tagline}</p>
+          <p className={styles.maker}>
+            {t.footer.maker}{" "}
+            <a href={garbarUrl(lang)} hrefLang={lang} className={styles.garbar}>
+              <GarBarMark />
+              GarBar
+            </a>
+          </p>
         </div>
-        <nav className={styles.languages} aria-label={t.footer.languages}>
-          {locales.map((locale) => (
-            <LanguageLink key={locale} locale={locale} current={lang}>
-              {localeNames[locale]}
-            </LanguageLink>
-          ))}
+        <nav className={styles.sections} aria-label={t.footer.sections}>
+          <a href={`${home}#how`}>{t.nav.how}</a>
+          <a href={`${home}#features`}>{t.nav.features}</a>
+          <a href={`${home}#worlds`}>{t.nav.worlds}</a>
         </nav>
       </div>
       <nav className={`container ${styles.legal}`} aria-label={t.footer.legal}>
@@ -35,10 +46,46 @@ export function Footer({ t, lang }: { t: Dictionary; lang: Locale }) {
         ))}
         <a href={`mailto:${company.supportEmail}`}>{t.footer.support}</a>
       </nav>
-      <div className={`container ${styles.fine}`}>
-        <p>{t.footer.rights}</p>
-        <p>{t.footer.trademark}</p>
+      <div className={`container ${styles.bottom}`}>
+        <div className={styles.fine}>
+          <p>{t.footer.rights}</p>
+          <p>{t.footer.trademark}</p>
+        </div>
+        <nav className={styles.languages} aria-label={t.footer.languages}>
+          {locales.map((locale) => (
+            <LanguageLink key={locale} locale={locale} current={lang}>
+              {localeNames[locale]}
+            </LanguageLink>
+          ))}
+        </nav>
+        <a href="#main" className={styles.back}>
+          {t.footer.backToTop}
+          <svg viewBox="0 0 16 16" aria-hidden="true">
+            <path d="M8 13V3m0 0L4 7m4-4 4 4" fill="none" stroke="currentColor" strokeWidth="1.6" />
+          </svg>
+        </a>
       </div>
+      <p className={styles.wordmark} aria-hidden="true">
+        Lucid Saga
+      </p>
     </footer>
+  );
+}
+
+/** GarBar's GB monogram (garbar.tech's brand.json): a G and a coral B sharing one stem. */
+function GarBarMark() {
+  return (
+    <svg
+      className={styles.mark}
+      viewBox="0 0 48 48"
+      fill="none"
+      strokeWidth="6"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <path d="M20 11H16C9.373 11 4 16.373 4 23S9.373 35 16 35H26V23H17" stroke="currentColor" />
+      <path d="M26 11H34A6 6 0 0 1 34 23H26M26 23H35A6 6 0 0 1 35 35H26V11" stroke="#ff5b35" />
+    </svg>
   );
 }

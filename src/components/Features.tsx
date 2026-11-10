@@ -4,6 +4,7 @@ import type { CSSProperties } from "react";
 import backBooth from "@/assets/scenes/back-booth.webp";
 import type { Dictionary } from "@/i18n";
 
+import { Eyebrow } from "./Eyebrow";
 import styles from "./Features.module.css";
 
 const VOICES = ["Sulafat", "Gacrux", "Charon", "Algieba"];
@@ -37,7 +38,7 @@ export function Features({ t }: { t: Dictionary }) {
     <section id="features" className={styles.section} aria-labelledby="features-title">
       <div className="container">
         <div className={styles.head} data-reveal>
-          <p className="eyebrow">{f.eyebrow}</p>
+          <Eyebrow n="02">{f.eyebrow}</Eyebrow>
           <h2 id="features-title" className="section-title">
             {f.title}
           </h2>

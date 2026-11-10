@@ -145,6 +145,24 @@ p {
   background: linear-gradient(90deg, transparent, var(--gold));
 }
 
+/* The home page numbers its sections, as the other GarBar sites do: the number in a small pill
+   takes the place of the rule. */
+.eyebrow:has(.eyebrow-n)::before {
+  content: none;
+}
+
+.eyebrow-n {
+  display: inline-grid;
+  place-items: center;
+  min-width: 34px;
+  height: 24px;
+  padding: 0 8px;
+  border: 1px solid rgba(227, 182, 107, 0.5);
+  border-radius: 999px;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+}
+
 .section-title {
   margin-top: 16px;
   font-size: clamp(2rem, 1.3rem + 2.6vw, 3.4rem);
