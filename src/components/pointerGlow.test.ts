@@ -20,6 +20,14 @@ describe("the gold glow's media query", () => {
     expect(css).toMatch(hidden);
     expect(css).toMatch(/pointer-events: none;/);
   });
+
+  it("stays a soft light: no part of it brighter than 15% gold", () => {
+    const css = readFileSync(new URL("./CursorGlow.module.css", import.meta.url), "utf8");
+    const glow = css.slice(css.indexOf(".glow {"), css.indexOf("}", css.indexOf(".glow {")));
+    const alphas = [...glow.matchAll(/rgba\([^)]*,\s*([\d.]+)\)/g)].map((match) => Number(match[1]));
+    expect(alphas.length).toBeGreaterThan(0);
+    expect(Math.max(...alphas)).toBeLessThanOrEqual(0.15);
+  });
 });
 
 describe("follow", () => {
