@@ -3,13 +3,14 @@ with it (scripts/prepare_images.py, gate.png), in two steps after scripts/upscal
 
     python3 scripts/repaint.py gate-x4.png out --variant faithful --model gemini-3-pro-image
     python3 scripts/repaint.py out/faithful-gemini-3-pro-image.png out --variant traveller \\
-        --model gemini-3-pro-image
+        --model gemini-nano-banana-2.1
 
 - gate-x4.png is the Real-ESRGAN upscale of the app icon's painting (scripts/upscale.py). The
   faithful step paints it again at 4096 px with nothing moved, which cleans up the upscale's
-  smudges; the traveller step then draws the cloaked traveller with more care (a gold rim of
-  light, robe folds, the satchel, boots) and leaves the rest of the scene alone. The last
-  picture is gate.png.
+  smudges; the traveller step then draws the cloaked traveller with more care (robe folds, a
+  buckled satchel, cuffed boots, a rim of light) and leaves the rest of the scene alone. Its
+  picture, out/traveller-gemini-nano-banana-2.1.png, is gate.png: Miki picked it over Gemini 3
+  Pro Image's for the traveller's detail.
 - The reference goes to the model as a 2048 px JPEG. Gemini paints a new picture each time, so a
   second run gives a close cousin, not the same file.
 
