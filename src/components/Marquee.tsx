@@ -27,7 +27,7 @@ export function Marquee({ t }: { t: Dictionary }) {
     </ul>
   );
   return (
-    <div className={styles.marquee} aria-hidden="true" data-marquee>
+    <div className={styles.marquee} aria-hidden="true">
       <div className={styles.track}>
         {row(false)}
         {row(true)}
