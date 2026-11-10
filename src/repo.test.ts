@@ -24,3 +24,13 @@ describe("Node", () => {
     expect(ci).not.toMatch(/container: node:/);
   });
 });
+
+describe("Dependabot alerts workflow", () => {
+  it("only reads the alerts, and only when started by hand or by the weekly pass", () => {
+    const workflow = read(".github/workflows/dependabot-alerts.yml");
+    expect(workflow).toMatch(/^permissions: \{\}$/m);
+    const scopes = [...workflow.matchAll(/^ +([a-z-]+): (read|write)$/gm)].map((m) => `${m[1]}: ${m[2]}`);
+    expect(scopes).toEqual(["vulnerability-alerts: read"]);
+    expect(workflow).toMatch(/^on:\n {2}workflow_dispatch:\n\n/m);
+  });
+});
