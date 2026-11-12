@@ -7,11 +7,444 @@
   max-width: 760px;
 }
 
-.grid {
+/* ---------- The four chapters ----------
+   Large cards, one after another. On wide windows each stays under the header as the page
+   scrolls on, a little lower than the one before so the stack shows its edges, and the next one
+   slides over it; ChapterStack sets --cover as it does, and the covered chapter settles back and
+   dims. */
+.chapters {
+  display: grid;
+  gap: 28px;
+  margin-top: 56px;
+}
+
+.chapter {
+  --glow: rgba(227, 182, 107, 0.1);
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.08fr);
+  align-items: center;
+  gap: clamp(32px, 5vw, 72px);
+  padding: clamp(28px, 4.4vw, 56px);
+  border-radius: 32px;
+  background:
+    radial-gradient(70% 90% at 100% 0%, var(--glow), transparent 70%),
+    linear-gradient(160deg, var(--surface-low), var(--surface) 55%, var(--ink));
+  box-shadow:
+    inset 0 0 0 1px var(--outline-soft),
+    0 -24px 60px rgba(0, 0, 0, 0.45);
+  overflow: hidden;
+  isolation: isolate;
+  transform-origin: 50% 0;
+  scale: calc(1 - var(--cover, 0) * 0.07);
+}
+
+/* The dimming as the next chapter covers this one. */
+.chapter::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  border-radius: inherit;
+  background: var(--ink-deep);
+  opacity: calc(var(--cover, 0) * 0.7);
+  pointer-events: none;
+}
+
+.copy {
+  position: relative;
+  z-index: 1;
+}
+
+.num {
+  display: block;
+  font-family: var(--font-display), Georgia, serif;
+  font-size: clamp(2.8rem, 2.2rem + 2vw, 4.2rem);
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.title {
+  margin-top: 18px;
+  font-family: var(--font-display), Georgia, serif;
+  font-size: clamp(1.75rem, 1.3rem + 1.5vw, 2.6rem);
+  font-weight: 500;
+  line-height: 1.1;
+  letter-spacing: -0.015em;
+}
+
+.body {
+  margin-top: 16px;
+  max-width: 34rem;
+  color: var(--text-2);
+  font-size: clamp(1rem, 0.96rem + 0.2vw, 1.08rem);
+  line-height: 1.7;
+}
+
+/* 01 Pictures: the scene fills the card, and the words sit over its darker side. */
+.pictures {
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  min-height: 520px;
+  background: var(--ink);
+}
+
+.frame {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+}
+
+.frame::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, rgba(11, 13, 18, 0.94) 0%, rgba(11, 13, 18, 0.72) 38%, rgba(11, 13, 18, 0) 72%),
+    linear-gradient(0deg, rgba(11, 13, 18, 0.5), transparent 40%);
+}
+
+.picture {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 70% 40%;
+}
+
+/* 02 Memory: violet, as Worlds' light. */
+.memory {
+  --glow: rgba(176, 140, 250, 0.12);
+}
+
+/* 03 Logic: its sheet first, in jade. */
+.logic {
+  --glow: rgba(92, 201, 167, 0.12);
+  grid-template-columns: minmax(0, 1.08fr) minmax(0, 1fr);
+  background:
+    radial-gradient(70% 90% at 0% 100%, var(--glow), transparent 70%),
+    linear-gradient(200deg, var(--surface-low), var(--surface) 55%, var(--ink));
+}
+
+.logic .sheet {
+  order: -1;
+}
+
+/* 04 World: the light of a day passing. */
+.world {
+  --glow: rgba(240, 138, 93, 0.1);
+}
+
+/* Memory: the app's Memory panel, with the dead struck through. */
+.memoryPanel {
+  display: flex;
+  flex-direction: column;
+  padding: clamp(18px, 2vw, 26px);
+  border-radius: 22px;
+  background: var(--ink);
+  box-shadow:
+    inset 0 0 0 1px var(--outline-soft),
+    0 30px 60px rgba(0, 0, 0, 0.35);
+}
+
+.panelTitle {
+  font-family: var(--font-display), Georgia, serif;
+  font-size: 24px;
+}
+
+.panelSub {
+  margin-top: 2px;
+  color: var(--text-3);
+  font-size: 13.5px;
+}
+
+.memoryPanel ul {
+  display: grid;
+  gap: 10px;
+  margin: 18px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.memoryPanel li {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 14px;
+  border-radius: var(--radius-md);
+  background: var(--surface-low);
+}
+
+.memoryPanel li > span:last-child {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.memoryPanel b {
+  position: relative;
+  align-self: flex-start;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.memoryPanel small {
+  color: var(--text-3);
+  font-size: 13.5px;
+}
+
+.avatar {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: linear-gradient(140deg, #3a3150, #1d2230);
+  color: var(--gold-hi);
+  font-family: var(--font-display), Georgia, serif;
+  font-size: 16px;
+  transition:
+    filter 0.8s ease 1.3s,
+    opacity 0.8s ease 1.3s;
+}
+
+.gone .avatar {
+  filter: grayscale(1);
+  opacity: 0.55;
+}
+
+.gone b {
+  color: var(--text-3);
+  transition: color 0.8s ease 1.3s;
+}
+
+/* The line through the dead, drawn across their name. */
+.gone b::after {
+  content: "";
+  position: absolute;
+  top: 55%;
+  left: -2px;
+  right: -2px;
+  height: 1.5px;
+  border-radius: 1px;
+  background: rgba(239, 122, 130, 0.8);
+  transform-origin: left;
+  transition: transform 0.7s var(--ease-out) 1.2s;
+}
+
+/* Logic: the app's "How it played out" sheet. */
+.sheet {
+  padding: clamp(20px, 2.2vw, 28px);
+  border-radius: 22px;
+  background: var(--ink);
+  box-shadow:
+    inset 0 0 0 1px var(--outline-soft),
+    0 30px 60px rgba(0, 0, 0, 0.35);
+}
+
+.sheetTitle {
+  color: var(--gold);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.sheet ul {
+  display: grid;
+  gap: 14px;
+  margin: 16px 0 0;
+  padding: 0;
+  list-style: none;
+  font-family: var(--font-serif), Georgia, serif;
+  font-size: clamp(15px, 0.9rem + 0.25vw, 17px);
+  color: var(--text);
+}
+
+.sheet li {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: var(--radius-md);
+  background: var(--surface-low);
+}
+
+.lineIcon {
+  width: 20px;
+  height: 20px;
+  margin-top: 2px;
+  flex-shrink: 0;
+  fill: none;
+  stroke: var(--jade);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.lineIcon path {
+  stroke-dasharray: 1;
+}
+
+.die {
+  stroke: var(--gold);
+  stroke-width: 1.6;
+}
+
+.die path {
+  stroke-dasharray: none;
+}
+
+/* World: a sun that keeps crossing the sky, and the app's time and event chips. */
+.worldVisual {
+  padding: clamp(20px, 2.2vw, 28px);
+  border-radius: 22px;
+  background: linear-gradient(180deg, rgba(240, 138, 93, 0.08), transparent 60%), var(--ink);
+  box-shadow:
+    inset 0 0 0 1px var(--outline-soft),
+    0 30px 60px rgba(0, 0, 0, 0.35);
+}
+
+.sky {
+  position: relative;
+  height: 140px;
+  margin-bottom: 20px;
+  border-bottom: 1px dashed var(--outline);
+  border-radius: 14px 14px 0 0;
+  background:
+    radial-gradient(60% 70% at 50% 100%, rgba(240, 138, 93, 0.16), transparent 70%),
+    linear-gradient(180deg, rgba(132, 169, 245, 0.05), rgba(240, 138, 93, 0.06));
+  overflow: hidden;
+}
+
+.sun {
+  position: absolute;
+  bottom: -18px;
+  left: -10%;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--gold-hi), var(--gold) 60%);
+  box-shadow: 0 0 40px rgba(227, 182, 107, 0.7);
+  animation: arc 11s ease-in-out infinite;
+}
+
+.worldChips {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.timeChip,
+.eventChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border-radius: 999px;
+  font-size: 14px;
+}
+
+.timeChip {
+  padding: 6px 13px;
+  background: var(--surface-mid);
+  color: var(--text-2);
+}
+
+.timeChip svg {
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+}
+
+.eventChip {
+  padding: 9px 15px;
+  background: color-mix(in srgb, var(--jade) 15%, var(--ink));
+  color: var(--jade);
+}
+
+.eventChip b {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* Each chapter's picture plays its moment the first time the chapter comes into view: the scene
+   settles into its frame, Memory's entries come in and the dead are struck through, the sheet's
+   lines tick in turn and the die rolls, and the day's chips arrive. Without script, or with
+   reduced motion, every picture shows its end. */
+@media (prefers-reduced-motion: no-preference) {
+  .picture {
+    transition: scale 2.6s var(--ease-out);
+  }
+
+  .js .pictures:not([data-visible]) .picture {
+    scale: 1.12;
+  }
+
+  .memoryPanel li,
+  .sheet li,
+  .worldChips > span {
+    transition:
+      opacity 0.7s var(--ease-out),
+      transform 0.7s var(--ease-out);
+    transition-delay: calc(0.35s + var(--i, 0) * 0.16s);
+  }
+
+  .worldChips > span:last-child {
+    transition-delay: 0.6s;
+  }
+
+  .js .chapter:not([data-visible]) .memoryPanel li,
+  .js .chapter:not([data-visible]) .sheet li,
+  .js .chapter:not([data-visible]) .worldChips > span {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+
+  .lineIcon path {
+    transition: stroke-dashoffset 0.6s var(--ease-out);
+    transition-delay: calc(0.65s + var(--i, 0) * 0.16s);
+  }
+
+  .js .chapter:not([data-visible]) .lineIcon path {
+    stroke-dashoffset: 1;
+  }
+
+  .die {
+    transition:
+      rotate 0.9s var(--ease-out) 0.95s,
+      scale 0.9s var(--ease-out) 0.95s;
+  }
+
+  .js .chapter:not([data-visible]) .die {
+    rotate: -200deg;
+    scale: 0.4;
+  }
+
+  .js .chapter:not([data-visible]) .gone b::after {
+    transform: scaleX(0);
+  }
+
+  .js .chapter:not([data-visible]) .gone .avatar {
+    filter: none;
+    opacity: 1;
+  }
+
+  .js .chapter:not([data-visible]) .gone b {
+    color: var(--text);
+  }
+}
+
+/* ---------- The ways a story is heard, spoken and read: three smaller cards ---------- */
+.trio {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 18px;
-  margin-top: 52px;
+  margin-top: 28px;
 }
 
 .card {
@@ -34,12 +467,12 @@
     0 20px 50px rgba(0, 0, 0, 0.35);
 }
 
-.title {
+.cardTitle {
   font-size: 1.28rem;
   line-height: 1.3;
 }
 
-.body {
+.cardBody {
   margin-top: 10px;
   color: var(--text-2);
   font-size: 15.5px;
@@ -52,37 +485,6 @@
   justify-content: center;
   min-height: 150px;
   margin-bottom: 22px;
-}
-
-/* Pictures: a scene from a story, across two columns. */
-.pictures {
-  grid-column: span 2;
-  min-height: 460px;
-  padding: 0;
-  justify-content: flex-end;
-}
-
-.picture {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 1.6s var(--ease-out);
-}
-
-.pictures:hover .picture {
-  transform: scale(1.03);
-}
-
-.overlay {
-  position: relative;
-  padding: 120px 30px 28px;
-  background: linear-gradient(180deg, transparent, rgba(11, 13, 18, 0.82) 45%, rgba(11, 13, 18, 0.96));
-}
-
-.overlay .body {
-  max-width: 56ch;
 }
 
 /* Voice: a play button and a waveform, and the four studio voices. */
@@ -191,206 +593,6 @@
   letter-spacing: 0.1em;
 }
 
-/* Logic: the app's "How it played out" sheet. */
-.sheet {
-  padding: 16px 18px;
-  border-radius: var(--radius-lg);
-  background: var(--surface-mid);
-  box-shadow: inset 0 0 0 1px var(--outline-soft);
-}
-
-.sheetTitle {
-  color: var(--gold);
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-}
-
-.sheet ul {
-  display: grid;
-  gap: 8px;
-  margin: 10px 0 0;
-  padding: 0;
-  list-style: none;
-  font-family: var(--font-serif), Georgia, serif;
-  font-size: 14px;
-  color: var(--text);
-}
-
-.sheet li {
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
-}
-
-.lineIcon {
-  width: 17px;
-  height: 17px;
-  margin-top: 2px;
-  flex-shrink: 0;
-  fill: none;
-  stroke: var(--jade);
-  stroke-width: 2;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
-.sheet li:last-child .lineIcon {
-  stroke: var(--gold);
-  stroke-width: 1.6;
-}
-
-/* World: a sun that keeps crossing the sky, and the app's time and event chips. */
-.sky {
-  position: relative;
-  height: 64px;
-  margin-bottom: 12px;
-  border-bottom: 1px dashed var(--outline);
-  overflow: hidden;
-}
-
-.sun {
-  position: absolute;
-  bottom: -14px;
-  left: -10%;
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  background: radial-gradient(circle, var(--gold-hi), var(--gold) 60%);
-  box-shadow: 0 0 30px rgba(227, 182, 107, 0.7);
-  animation: arc 9s ease-in-out infinite;
-}
-
-.worldChips {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 8px;
-}
-
-.timeChip,
-.eventChip {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  border-radius: 999px;
-  font-size: 12.5px;
-}
-
-.timeChip {
-  padding: 5px 11px;
-  background: var(--surface-mid);
-  color: var(--text-2);
-}
-
-.timeChip svg {
-  width: 14px;
-  height: 14px;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 1.8;
-}
-
-.eventChip {
-  padding: 7px 13px;
-  background: color-mix(in srgb, var(--jade) 15%, var(--ink));
-  color: var(--jade);
-}
-
-.eventChip b {
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-}
-
-/* Memory: across two columns, the words beside the app's Memory panel. */
-.memory {
-  grid-column: span 2;
-  display: grid;
-  grid-template-columns: 1fr 1.1fr;
-  align-items: center;
-  gap: 28px;
-}
-
-.memoryPanel {
-  display: flex;
-  flex-direction: column;
-  padding: 18px;
-  border-radius: var(--radius-lg);
-  background: var(--ink);
-  box-shadow: inset 0 0 0 1px var(--outline-soft);
-}
-
-.panelTitle {
-  font-family: var(--font-display), Georgia, serif;
-  font-size: 20px;
-}
-
-.panelSub {
-  margin-top: 2px;
-  color: var(--text-3);
-  font-size: 12.5px;
-}
-
-.memoryPanel ul {
-  display: grid;
-  gap: 10px;
-  margin: 14px 0 0;
-  padding: 0;
-  list-style: none;
-}
-
-.memoryPanel li {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 10px 12px;
-  border-radius: var(--radius-md);
-  background: var(--surface-low);
-}
-
-.memoryPanel li > span:last-child {
-  display: flex;
-  flex-direction: column;
-  min-width: 0;
-}
-
-.memoryPanel b {
-  font-size: 14px;
-  font-weight: 600;
-}
-
-.memoryPanel small {
-  color: var(--text-3);
-  font-size: 12.5px;
-}
-
-.avatar {
-  display: grid;
-  place-items: center;
-  width: 34px;
-  height: 34px;
-  flex-shrink: 0;
-  border-radius: 50%;
-  background: linear-gradient(140deg, #3a3150, #1d2230);
-  color: var(--gold-hi);
-  font-family: var(--font-display), Georgia, serif;
-  font-size: 15px;
-}
-
-.gone .avatar {
-  filter: grayscale(1);
-  opacity: 0.55;
-}
-
-.gone b {
-  color: var(--text-3);
-  text-decoration: line-through;
-  text-decoration-color: rgba(239, 122, 130, 0.7);
-}
-
 /* Dictation: a listening mic and the words it heard. */
 .dictation .visual {
   align-items: flex-start;
@@ -466,14 +668,14 @@
 @keyframes arc {
   0% {
     left: -10%;
-    bottom: -20px;
+    bottom: -24px;
   }
   50% {
-    bottom: 26px;
+    bottom: 84px;
   }
   100% {
     left: 100%;
-    bottom: -20px;
+    bottom: -24px;
   }
 }
 
@@ -488,32 +690,62 @@
   }
 }
 
+/* Wide, tall windows: the chapters stack under the header, each a little lower than the last. */
+@media (min-width: 901px) and (min-height: 600px) {
+  .chapter {
+    position: sticky;
+    top: calc(var(--header-h) + 22px + var(--i, 0) * 14px);
+    min-height: min(520px, calc(100svh - var(--header-h) - 100px));
+  }
+}
+
 @media (max-width: 1100px) {
-  .grid {
+  .trio {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .memory {
-    grid-template-columns: 1fr;
-  }
-
-  .dictation {
+  .languages {
     grid-column: span 2;
   }
 }
 
-@media (max-width: 760px) {
-  .grid {
+@media (max-width: 900px) {
+  .chapter,
+  .pictures,
+  .logic {
     grid-template-columns: 1fr;
   }
 
-  .pictures,
-  .memory,
-  .dictation {
-    grid-column: auto;
+  .logic .sheet {
+    order: 0;
   }
 
   .pictures {
-    min-height: 420px;
+    min-height: 0;
+    padding-top: min(62vw, 360px);
+  }
+
+  .frame {
+    bottom: auto;
+    height: calc(min(62vw, 360px) + 120px);
+  }
+
+  .frame::after {
+    background: linear-gradient(
+      0deg,
+      rgba(11, 13, 18, 1) 0%,
+      rgba(11, 13, 18, 0.6) 30%,
+      rgba(11, 13, 18, 0) 60%
+    );
+  }
+}
+
+@media (max-width: 760px) {
+  .trio {
+    grid-template-columns: 1fr;
+  }
+
+  .languages {
+    grid-column: auto;
   }
 }

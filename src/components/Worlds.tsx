@@ -8,6 +8,7 @@ import type { Dictionary } from "@/i18n";
 import type { Locale } from "@/i18n/locales";
 
 import { Eyebrow } from "./Eyebrow";
+import { MaskLine } from "./MaskLine";
 import styles from "./Worlds.module.css";
 
 function Cover({
@@ -50,10 +51,10 @@ export function Worlds({ t, lang }: { t: Dictionary; lang: Locale }) {
   return (
     <section id="worlds" className={styles.section} aria-labelledby="worlds-title">
       <div className="container">
-        <div className={styles.head} data-reveal>
+        <div className={styles.head} data-reveal="head">
           <Eyebrow n="03">{t.worlds.eyebrow}</Eyebrow>
           <h2 id="worlds-title" className="section-title">
-            {t.worlds.title}
+            <MaskLine>{t.worlds.title}</MaskLine>
           </h2>
           <p className="section-lead">{t.worlds.body}</p>
         </div>
