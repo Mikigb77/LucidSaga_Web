@@ -17,7 +17,7 @@ export default async function Home({ params }: PageProps<"/[lang]">) {
     <main id="main">
       <Hero t={t} />
       <Marquee t={t} />
-      <HowItPlays t={t} />
+      <HowItPlays t={t} lang={lang} />
       <Features t={t} />
       <Worlds t={t} lang={lang} />
       <FinalCta t={t} />

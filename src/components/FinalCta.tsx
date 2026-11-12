@@ -4,6 +4,7 @@ import gate from "@/assets/gate.webp";
 import type { Dictionary } from "@/i18n";
 
 import styles from "./FinalCta.module.css";
+import { MaskLine } from "./MaskLine";
 import { PlayBadge } from "./PlayBadge";
 
 export function FinalCta({ t }: { t: Dictionary }) {
@@ -12,9 +13,11 @@ export function FinalCta({ t }: { t: Dictionary }) {
       <div className={styles.art} aria-hidden="true">
         <Image src={gate} alt="" sizes="(max-width: 700px) 160vw, 900px" />
       </div>
-      <div className={`container ${styles.content}`} data-reveal>
+      <div className={`container ${styles.content}`} data-reveal="head">
         <h2 id="final-title" className={styles.title}>
-          <span className="gold-text">{t.final.title}</span>
+          <MaskLine>
+            <span className="gold-text">{t.final.title}</span>
+          </MaskLine>
         </h2>
         <p className={styles.body}>{t.final.body}</p>
         <div className={styles.badge}>

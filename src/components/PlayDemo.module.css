@@ -1,14 +1,15 @@
 .figure {
   margin: 0;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
 }
 
 /* A phone in the app's dark theme, lit from behind by the story's accent. */
 .phone {
   --accent: var(--jade);
   position: relative;
-  width: clamp(280px, 27vw, 340px);
+  width: var(--phone-w, clamp(280px, 27vw, 340px));
   aspect-ratio: 9 / 19;
   padding: 10px;
   border-radius: 48px;
@@ -41,6 +42,45 @@
 
 .fading {
   opacity: 0;
+}
+
+/* The app's three screens, one over another: the one showing slides in the way the app pushes a
+   screen, and the others wait to its sides. */
+.views {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+}
+
+.view {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 0.55s ease,
+    transform 0.8s var(--ease-out),
+    visibility 0s linear 0.8s;
+}
+
+.before {
+  transform: translateX(-16%);
+}
+
+.after {
+  transform: translateX(16%);
+}
+
+.on {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+  transition:
+    opacity 0.55s ease 0.1s,
+    transform 0.8s var(--ease-out),
+    visibility 0s;
 }
 
 .status {
@@ -219,11 +259,8 @@
   animation: appear 0.5s var(--ease-out) both;
 }
 
-.after {
-  margin-top: 14px;
-}
-
 .listen {
+  margin-top: 14px;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -273,7 +310,7 @@
   display: flex;
   flex-direction: column;
   gap: 6px;
-  margin-top: 10px;
+  margin-top: 12px;
 }
 
 .choice {
@@ -365,6 +402,491 @@
   stroke: var(--ink);
 }
 
+/* 01: Discover, as the app opens it: the headline, a signature world and the own-idea card. */
+.discover {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 8px 16px 12px;
+  overflow: hidden;
+}
+
+.bigTitle {
+  font-family: var(--font-display), Georgia, serif;
+  font-size: 25px;
+  line-height: 1.15;
+}
+
+.sub {
+  margin-top: 3px;
+  color: var(--text-2);
+  font-size: 11.5px;
+  line-height: 1.4;
+}
+
+.group {
+  margin-top: 14px;
+  color: var(--gold);
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.world {
+  --world: var(--gold);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  flex-shrink: 0;
+  aspect-ratio: 4 / 3.3;
+  margin-top: 8px;
+  border-radius: 18px;
+  overflow: hidden;
+  isolation: isolate;
+  box-shadow: inset 0 0 0 1px var(--outline-soft);
+  transition: box-shadow 0.5s ease;
+}
+
+.world::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(
+    180deg,
+    rgba(11, 13, 18, 0) 35%,
+    rgba(11, 13, 18, 0.75) 68%,
+    rgba(11, 13, 18, 0.96)
+  );
+}
+
+.worldImage {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.worldBadge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--world) 70%, transparent);
+  background: rgba(11, 13, 18, 0.6);
+  color: var(--world);
+  font-size: 7.5px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.worldText {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 12px 13px 13px;
+}
+
+.worldGenre {
+  color: var(--world);
+  font-size: 8px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.worldTitle {
+  font-family: var(--font-display), Georgia, serif;
+  font-size: 16px;
+  line-height: 1.2;
+}
+
+.worldTagline {
+  color: var(--text-2);
+  font-size: 10px;
+  line-height: 1.4;
+}
+
+/* The tap that picks the world: a ripple, and the card lit in its genre's colour. */
+.tap {
+  position: absolute;
+  top: 42%;
+  left: 60%;
+  width: 46px;
+  height: 46px;
+  margin: -23px 0 0 -23px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(246, 223, 168, 0.55),
+    rgba(246, 223, 168, 0.12) 60%,
+    transparent 72%
+  );
+  opacity: 0;
+  transform: scale(0.3);
+  pointer-events: none;
+}
+
+.picked {
+  box-shadow:
+    inset 0 0 0 1.5px var(--world),
+    0 0 26px color-mix(in srgb, var(--world) 32%, transparent);
+  animation: press 0.6s var(--ease-out);
+}
+
+.picked .tap {
+  animation: tap 0.9s ease-out both;
+}
+
+.create {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+  padding: 10px 12px;
+  border-radius: 14px;
+  border: 1px solid rgba(227, 182, 107, 0.32);
+  background: color-mix(in srgb, var(--gold) 7%, var(--surface-low));
+}
+
+.create b {
+  display: block;
+  font-size: 11.5px;
+  font-weight: 600;
+}
+
+.create small {
+  display: block;
+  color: var(--text-2);
+  font-size: 10px;
+  line-height: 1.35;
+}
+
+.spark {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  fill: var(--gold);
+}
+
+.go {
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
+  margin-left: auto;
+  fill: none;
+  stroke: var(--gold);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.more {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.small {
+  --world: var(--gold);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  aspect-ratio: 4 / 5;
+  border-radius: 14px;
+  overflow: hidden;
+  isolation: isolate;
+  box-shadow: inset 0 0 0 1px var(--outline-soft);
+}
+
+.small::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(180deg, rgba(11, 13, 18, 0) 40%, rgba(11, 13, 18, 0.92));
+}
+
+.small .worldText {
+  padding: 9px 10px;
+}
+
+.smallTitle {
+  font-family: var(--font-display), Georgia, serif;
+  font-size: 12.5px;
+  line-height: 1.2;
+}
+
+.nav {
+  display: flex;
+  justify-content: space-around;
+  padding: 8px 8px 14px;
+  border-top: 1px solid var(--outline-soft);
+  background: var(--surface);
+  color: var(--text-3);
+  font-size: 9.5px;
+}
+
+.nav > span {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+}
+
+.nav svg {
+  width: 38px;
+  height: 22px;
+  padding: 2px 10px;
+  border-radius: 999px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linejoin: round;
+}
+
+.navOn {
+  color: var(--text);
+}
+
+.navOn svg {
+  background: color-mix(in srgb, var(--gold) 26%, transparent);
+  stroke: var(--gold-hi);
+}
+
+/* 04: Memory, in the world's words: the deed just done lands at the top of the deeds. */
+.memory {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  padding: 0 14px 14px;
+  overflow: hidden;
+}
+
+.memory .sub {
+  margin-top: -4px;
+}
+
+.filters {
+  display: flex;
+  gap: 5px;
+  margin-top: 4px;
+}
+
+.filters span {
+  padding: 3px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--outline-soft);
+  color: var(--text-2);
+  font-size: 9.5px;
+  font-weight: 600;
+}
+
+.filters .filterOn {
+  border-color: transparent;
+  background: color-mix(in srgb, var(--accent) 22%, var(--surface-mid));
+  color: var(--text);
+}
+
+.memory .group {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 6px;
+  color: var(--accent);
+}
+
+.memory .group::before {
+  content: "";
+  width: 12px;
+  height: 1px;
+  background: currentColor;
+}
+
+.entry {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  padding: 9px 10px;
+  border-radius: 12px;
+  background: var(--surface-low);
+  border: 1px solid var(--outline-soft);
+}
+
+.entry > span:last-child {
+  min-width: 0;
+}
+
+.entry b {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.entry small {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 2px;
+  color: var(--text-3);
+  font-size: 9.5px;
+  line-height: 1.35;
+}
+
+.entry small svg {
+  width: 11px;
+  height: 11px;
+  flex-shrink: 0;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+}
+
+.entry .seen {
+  color: var(--accent);
+}
+
+.entryIcon {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  flex-shrink: 0;
+  border-radius: 8px;
+  background: var(--surface-mid);
+}
+
+.entryIcon svg {
+  width: 14px;
+  height: 14px;
+  fill: none;
+  stroke: var(--text-2);
+  stroke-width: 1.7;
+  stroke-linejoin: round;
+}
+
+.avatar {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: linear-gradient(140deg, #3a3150, #1d2230);
+  color: var(--gold-hi);
+  font-family: var(--font-display), Georgia, serif;
+  font-size: 12px;
+}
+
+.hostile {
+  margin-left: 4px;
+  padding: 1px 6px;
+  border-radius: 999px;
+  border: 1px solid rgba(239, 122, 130, 0.6);
+  color: #ef7a82;
+  font-size: 8.5px;
+  font-style: normal;
+  font-weight: 600;
+  vertical-align: 1px;
+}
+
+.gone .avatar {
+  filter: grayscale(1);
+  opacity: 0.55;
+}
+
+.gone b {
+  color: var(--text-3);
+  text-decoration: line-through;
+  text-decoration-color: rgba(239, 122, 130, 0.7);
+}
+
+/* The new deed opens a space at the top of the deeds and settles in, lit for a moment. */
+.fresh {
+  display: grid;
+  grid-template-rows: 0fr;
+  margin-bottom: -7px;
+  opacity: 0;
+  transition:
+    grid-template-rows 0.6s var(--ease-out),
+    margin-bottom 0.6s var(--ease-out),
+    opacity 0.5s ease 0.15s;
+}
+
+.fresh > div {
+  min-height: 0;
+  overflow: hidden;
+}
+
+.kept {
+  grid-template-rows: 1fr;
+  margin-bottom: 0;
+  opacity: 1;
+}
+
+.kept .entry {
+  border-color: color-mix(in srgb, var(--accent) 55%, transparent);
+  animation: kept 2.6s ease-out 0.3s both;
+}
+
+.kept .entryIcon {
+  background: color-mix(in srgb, var(--accent) 22%, var(--surface-mid));
+}
+
+.kept .entryIcon svg {
+  stroke: var(--accent);
+}
+
+/* Under the phone when it plays the steps by itself: the step it shows. */
+.caption {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 2.6em;
+  margin: 26px 0 0;
+  color: var(--text);
+  font-family: var(--font-serif), Georgia, serif;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.following .caption {
+  display: none;
+}
+
+.captionN {
+  display: inline-grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  border: 1px solid rgba(227, 182, 107, 0.6);
+  background: var(--ink);
+  color: var(--gold-hi);
+  font-family: var(--font-display), Georgia, serif;
+  font-size: 13px;
+  font-weight: 500;
+  box-shadow: 0 0 22px rgba(227, 182, 107, 0.2);
+}
+
+.captionText {
+  animation: appear 0.5s var(--ease-out) both;
+}
+
 @keyframes pulse {
   50% {
     opacity: 0.35;
@@ -391,5 +913,48 @@
   }
   50% {
     transform: scaleY(1);
+  }
+}
+
+@keyframes tap {
+  0% {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+  25% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: scale(2.6);
+  }
+}
+
+@keyframes press {
+  30% {
+    transform: scale(0.975);
+  }
+}
+
+@keyframes kept {
+  0% {
+    box-shadow: 0 0 0 color-mix(in srgb, var(--accent) 0%, transparent);
+  }
+  25% {
+    box-shadow: 0 0 22px color-mix(in srgb, var(--accent) 35%, transparent);
+  }
+  100% {
+    box-shadow: 0 0 0 color-mix(in srgb, var(--accent) 0%, transparent);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .view,
+  .on,
+  .fresh,
+  .world,
+  .picture,
+  .screen {
+    transition: none;
   }
 }

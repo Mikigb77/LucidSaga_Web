@@ -5,7 +5,7 @@ export const es: Dictionary = {
   meta: {
     title: "Lucid Saga · La historia que lo recuerda todo",
     description:
-      "Un juego de historias con IA que no termina nunca. Elige un mundo o escribe una línea, actúa como quieras y el narrador escribe lo que pasa después, con imágenes y voz. Próximamente en Google Play.",
+      "Un juego de historias con IA que no termina nunca. Elige un mundo o imagina el tuyo, actúa como quieras y el narrador escribe lo que pasa después, con imágenes y voz. Próximamente en Google Play.",
     ogAlt: "Lucid Saga: una figura encapuchada cruza una puerta luminosa. Próximamente en Google Play.",
   },
   nav: {
@@ -46,13 +46,37 @@ export const es: Dictionary = {
     choices: ["Corre hacia la puerta exterior", "Pregúntale quién lo envía", "Espera y observa"],
     composer: "¿Qué haces?",
     readAloud: "Leer en voz alta",
+    discover: "Descubrir",
+    discoverHeadline: "Elige un mundo o imagina el tuyo.",
+    createTitle: "Empieza con tu propia idea",
+    createBody: "Una línea basta para levantar un mundo.",
+    library: "Biblioteca",
+    account: "Cuenta",
+    memoryAll: "Todo",
+    memoryPeople: "Personas",
+    memoryDeeds: "Actos",
+    hostile: "Hostil",
+    memoryPlaces: "Lugares",
+    place: { name: "El pozo de piedra", note: "Todavía sale vapor de él." },
+    deeds: [
+      {
+        text: "Desviaste su rayo hacia el pozo",
+        when: "Día 1, atardecer",
+        known: "El mago gris lo vio",
+      },
+      {
+        text: "Robaste el pergamino prohibido",
+        when: "Día 1, amanecer",
+        known: "Nadie lo vio, que tú sepas",
+      },
+    ],
   },
   how: {
     eyebrow: "Cómo se juega",
     title: "Tú decides qué pasa. El mundo responde.",
     steps: [
       {
-        title: "Elige un mundo o escribe una línea",
+        title: "Elige un mundo o imagina el tuyo",
         body: "Empieza en uno de los 23 mundos o escribe una premisa. El narrador crea el mundo y tu personaje, y puedes cambiar lo que quieras antes de empezar.",
       },
       {

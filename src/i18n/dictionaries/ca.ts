@@ -5,7 +5,7 @@ export const ca: Dictionary = {
   meta: {
     title: "Lucid Saga · La història que ho recorda tot",
     description:
-      "Un joc d'històries amb IA que no s'acaba mai. Tria un món o escriu una línia, actua com vulguis i el narrador escriu què passa després, amb imatges i veu. Aviat a Google Play.",
+      "Un joc d'històries amb IA que no s'acaba mai. Tria un món o imagina el teu, actua com vulguis i el narrador escriu què passa després, amb imatges i veu. Aviat a Google Play.",
     ogAlt: "Lucid Saga: una figura encaputxada travessa una porta lluminosa. Aviat a Google Play.",
   },
   nav: {
@@ -46,13 +46,37 @@ export const ca: Dictionary = {
     choices: ["Corre cap a la porta exterior", "Pregunta-li qui l'envia", "Espera i observa"],
     composer: "Què fas?",
     readAloud: "Llegeix en veu alta",
+    discover: "Descobreix",
+    discoverHeadline: "Tria un món o imagina el teu.",
+    createTitle: "Comença amb la teva pròpia idea",
+    createBody: "Amb una línia n'hi ha prou per aixecar un món.",
+    library: "Biblioteca",
+    account: "Compte",
+    memoryAll: "Tot",
+    memoryPeople: "Persones",
+    memoryDeeds: "Actes",
+    hostile: "Hostil",
+    memoryPlaces: "Llocs",
+    place: { name: "El pou de pedra", note: "Encara en surt vapor." },
+    deeds: [
+      {
+        text: "Vas desviar el seu llamp cap al pou",
+        when: "Dia 1, capvespre",
+        known: "El mag gris ho va veure",
+      },
+      {
+        text: "Vas robar el pergamí prohibit",
+        when: "Dia 1, alba",
+        known: "Ningú no ho va veure, que tu sàpigues",
+      },
+    ],
   },
   how: {
     eyebrow: "Com es juga",
     title: "Tu decideixes què passa. El món respon.",
     steps: [
       {
-        title: "Tria un món o escriu una línia",
+        title: "Tria un món o imagina el teu",
         body: "Comença en un dels 23 mons o escriu una premissa. El narrador crea el món i el teu personatge, i pots canviar el que vulguis abans de començar.",
       },
       {
