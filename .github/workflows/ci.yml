@@ -18,7 +18,7 @@ jobs:
   # The Node image the site runs on, read from the Dockerfile, so the web job checks the site on the
   # same Node, and a Dependabot update of the Dockerfile's Node is checked on the new one.
   node-image:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     timeout-minutes: 5
     outputs:
       image: ${{ steps.read.outputs.image }}
@@ -35,7 +35,7 @@ jobs:
   # Formatting, lint, types, unit tests and the production build, on the Node the image runs.
   web:
     needs: node-image
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     timeout-minutes: 15
     container: ${{ needs.node-image.outputs.image }}
     env:
@@ -59,7 +59,7 @@ jobs:
   # Builds the Cloud Run image and serves it as Cloud Run would, on port 8080 as a non-root user,
   # then checks the pages a visitor and a link preview reach.
   image:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -87,7 +87,7 @@ jobs:
   # Only dev merges into main, because that merge deploys. Every other PR goes into dev.
   into-main:
     if: github.event_name == 'pull_request' && github.base_ref == 'main'
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     steps:
       - name: Only dev merges into main
         env:
@@ -102,7 +102,7 @@ jobs:
   # The deploy scripts and workflows (docs/DEPLOY.md), with no credentials: the real gcloud runs
   # offline and signed out to check every flag the scripts pass.
   infra:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1

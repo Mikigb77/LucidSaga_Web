@@ -51,6 +51,12 @@ denied; re-run it a few minutes later. The first deploy did exactly that (2026-1
 The Deploy workflow can also be started by hand on `main` (Actions, Deploy, Run workflow): with
 "Dry run" ticked it signs in, checks the setup and builds the image, and only prints the rest.
 
+Every job runs on `ubuntu-latest`, GitHub's newest stable Ubuntu image (Miki, 2026-11-11). GitHub
+moves that name to the next Ubuntu on its own schedule, and the tools on the machine change with
+it. So when a check or a deploy fails with no change of ours, look first at whether the image
+moved: the job's "Set up job" step names it. Until the fix is in, the workflows can name the last
+version that worked (`ubuntu-24.04` on that date).
+
 ## Dependabot
 
 Dependabot watches the site's npm packages, the image's Node (both stages of the `Dockerfile`) and

@@ -7,7 +7,7 @@ export const en = {
   meta: {
     title: "Lucid Saga · The story that remembers",
     description:
-      "An endless AI story game. Pick a world or write one line, act however you like, and the storyteller writes what happens next, with pictures and a narrator's voice. Coming soon to Google Play.",
+      "An endless AI story game. Pick a world or dream up your own, act however you like, and the storyteller writes what happens next, with pictures and a narrator's voice. Coming soon to Google Play.",
     ogAlt: "Lucid Saga: a hooded traveller walks through a glowing gate. Coming soon to Google Play.",
   },
   nav: {
@@ -48,13 +48,37 @@ export const en = {
     choices: ["Run for the outer gate", "Ask who sent him", "Wait and watch"],
     composer: "What do you do?",
     readAloud: "Read aloud",
+    discover: "Discover",
+    discoverHeadline: "Pick a world, or dream up your own.",
+    createTitle: "Start from your own idea",
+    createBody: "One line is enough to build a world.",
+    library: "Library",
+    account: "Account",
+    memoryAll: "All",
+    memoryPeople: "People",
+    memoryDeeds: "Deeds",
+    hostile: "Hostile",
+    memoryPlaces: "Places",
+    place: { name: "The stone well", note: "Steam still rises from it." },
+    deeds: [
+      {
+        text: "You turned his lightning into the well",
+        when: "Day 1, dusk",
+        known: "The grey mage saw it",
+      },
+      {
+        text: "You stole the forbidden scroll",
+        when: "Day 1, dawn",
+        known: "No one saw, as far as you know",
+      },
+    ],
   },
   how: {
     eyebrow: "How it plays",
     title: "You choose what happens. The world answers.",
     steps: [
       {
-        title: "Pick a world, or write one line",
+        title: "Pick a world, or dream up your own",
         body: "Start from one of 23 worlds, or type a premise. The storyteller drafts the world and your character, and you change anything you like before you begin.",
       },
       {

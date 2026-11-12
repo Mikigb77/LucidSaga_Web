@@ -200,6 +200,51 @@ p {
   transform: none;
 }
 
+/* A section's heading block: it stays where it is while its label and lead rise into place and
+   its title slides up from behind its own lower edge (components/MaskLine). The padding gives the
+   letters' tails room inside the mask; the margin takes it back. Without script, or with reduced
+   motion, all of it is simply there. */
+.js [data-reveal="head"] {
+  opacity: 1;
+  transform: none;
+}
+
+.mask-line {
+  display: block;
+  overflow: hidden;
+  padding-block: 0.12em 0.2em;
+  margin-block: -0.12em -0.2em;
+}
+
+.mask-line > span {
+  display: block;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .js [data-reveal="head"] > :not(h2) {
+    transition:
+      opacity 0.9s var(--ease-out),
+      transform 0.9s var(--ease-out);
+  }
+
+  .js [data-reveal="head"] > :not(h2):not(:first-child) {
+    transition-delay: 0.28s;
+  }
+
+  .js [data-reveal="head"]:not([data-visible]) > :not(h2) {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+
+  .mask-line > span {
+    transition: transform 1.15s var(--ease-out) 0.08s;
+  }
+
+  .js [data-reveal]:not([data-visible]) .mask-line > span {
+    transform: translateY(112%);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;

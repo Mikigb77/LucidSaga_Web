@@ -4,8 +4,11 @@ import type { CSSProperties } from "react";
 import backBooth from "@/assets/scenes/back-booth.webp";
 import type { Dictionary } from "@/i18n";
 
+import { ChapterStack } from "./ChapterStack";
 import { Eyebrow } from "./Eyebrow";
 import styles from "./Features.module.css";
+import { MaskLine } from "./MaskLine";
+import { initial } from "./playScript";
 
 const VOICES = ["Sulafat", "Gacrux", "Charon", "Algieba"];
 const HINTS = [
@@ -14,116 +17,119 @@ const HINTS = [
   { lang: "ca", code: "CA", text: "Què fas?" },
 ];
 
+const order = (i: number) => ({ "--i": i }) as CSSProperties;
+const delay = (i: number) => ({ "--reveal-delay": `${i * 90}ms` }) as CSSProperties;
+
 function Check() {
   return (
     <svg viewBox="0 0 24 24" className={styles.lineIcon} aria-hidden="true">
-      <path d="m5 12.5 4.5 4.5L19 7.5" />
+      <path d="m5 12.5 4.5 4.5L19 7.5" pathLength={1} />
     </svg>
   );
 }
 
 function Die() {
   return (
-    <svg viewBox="0 0 24 24" className={styles.lineIcon} aria-hidden="true">
+    <svg viewBox="0 0 24 24" className={`${styles.lineIcon} ${styles.die}`} aria-hidden="true">
       <path d="M12 2.8 20 7.4v9.2l-8 4.6-8-4.6V7.4z" />
       <path d="M12 2.8v8.6m0 0 8-4M12 11.4l-8-4M12 11.4v9.8" />
     </svg>
   );
 }
 
+/** A chapter's number, large and gold, as TaskFlow's and garbar.tech's chapters have. */
+function Num({ n }: { n: number }) {
+  return (
+    <span className={`${styles.num} gold-text`} aria-hidden="true">
+      {String(n).padStart(2, "0")}
+    </span>
+  );
+}
+
+/**
+ * What makes it different, in two parts: four chapters, each a large card with its words beside
+ * a picture of it in the app, which stack under the header as the page scrolls (ChapterStack);
+ * and then three smaller cards for the ways a story is heard, spoken and read. Each chapter's
+ * picture plays its moment the first time it comes into view.
+ */
 export function Features({ t }: { t: Dictionary }) {
   const f = t.features;
-  const delay = (i: number) => ({ "--reveal-delay": `${(i % 3) * 80}ms` }) as CSSProperties;
   return (
     <section id="features" className={styles.section} aria-labelledby="features-title">
       <div className="container">
-        <div className={styles.head} data-reveal>
+        <div className={styles.head} data-reveal="head">
           <Eyebrow n="02">{f.eyebrow}</Eyebrow>
           <h2 id="features-title" className="section-title">
-            {f.title}
+            <MaskLine>{f.title}</MaskLine>
           </h2>
         </div>
 
-        <div className={styles.grid}>
-          <article className={`${styles.card} ${styles.pictures}`} data-reveal style={delay(0)}>
-            <Image
-              src={backBooth}
-              alt={f.pictures.alt}
-              sizes="(max-width: 760px) 100vw, (max-width: 1100px) 100vw, 66vw"
-              className={styles.picture}
-            />
-            <div className={styles.overlay}>
+        <ChapterStack className={styles.chapters}>
+          <article className={`${styles.chapter} ${styles.pictures}`} data-reveal style={order(0)}>
+            <div className={styles.frame}>
+              <Image
+                src={backBooth}
+                alt={f.pictures.alt}
+                sizes="(max-width: 900px) 100vw, 1180px"
+                className={styles.picture}
+              />
+            </div>
+            <div className={styles.copy}>
+              <Num n={1} />
               <h3 className={styles.title}>{f.pictures.title}</h3>
               <p className={styles.body}>{f.pictures.body}</p>
             </div>
           </article>
 
-          <article className={`${styles.card} ${styles.voice}`} data-reveal style={delay(1)}>
-            <div className={styles.visual} aria-hidden="true">
-              <div className={styles.player}>
-                <span className={styles.playButton}>
-                  <svg viewBox="0 0 24 24">
-                    <path d="M8 5.5v13l11-6.5z" />
-                  </svg>
-                </span>
-                <span className={styles.wave}>
-                  {Array.from({ length: 28 }, (_, i) => (
-                    <i key={i} style={{ "--i": i } as CSSProperties} />
-                  ))}
-                </span>
-              </div>
-              <div className={styles.voices}>
-                {VOICES.map((voice, i) => (
-                  <span key={voice} className={i === 0 ? styles.voiceOn : styles.voiceName}>
-                    {voice}
-                  </span>
+          <article className={`${styles.chapter} ${styles.memory}`} data-reveal style={order(1)}>
+            <div className={styles.copy}>
+              <Num n={2} />
+              <h3 className={styles.title}>{f.memory.title}</h3>
+              <p className={styles.body}>{f.memory.body}</p>
+            </div>
+            <div className={styles.memoryPanel} aria-hidden="true">
+              <span className={styles.panelTitle}>{f.memory.label}</span>
+              <span className={styles.panelSub}>{f.memory.sublabel}</span>
+              <ul>
+                {f.memory.items.map((item, i) => (
+                  <li key={item.name} className={i === 0 ? styles.gone : undefined} style={order(i)}>
+                    <span className={styles.avatar}>{initial(item.name)}</span>
+                    <span>
+                      <b>{item.name}</b>
+                      <small>{item.note}</small>
+                    </span>
+                  </li>
                 ))}
-              </div>
+              </ul>
             </div>
-            <h3 className={styles.title}>{f.voice.title}</h3>
-            <p className={styles.body}>{f.voice.body}</p>
           </article>
 
-          <article className={`${styles.card} ${styles.languages}`} data-reveal style={delay(2)}>
-            <div className={styles.visual} aria-hidden="true">
-              <div className={styles.hints}>
-                {HINTS.map((hint, i) => (
-                  <span
-                    key={hint.code}
-                    lang={hint.lang}
-                    className={styles.hint}
-                    style={{ "--i": i } as CSSProperties}
-                  >
-                    <b>{hint.code}</b>
-                    {hint.text}
-                  </span>
+          <article className={`${styles.chapter} ${styles.logic}`} data-reveal style={order(2)}>
+            <div className={styles.copy}>
+              <Num n={3} />
+              <h3 className={styles.title}>{f.logic.title}</h3>
+              <p className={styles.body}>{f.logic.body}</p>
+            </div>
+            <div className={styles.sheet} aria-hidden="true">
+              <span className={styles.sheetTitle}>{f.logic.card}</span>
+              <ul>
+                {f.logic.lines.map((line, i) => (
+                  <li key={line} style={order(i)}>
+                    {i < f.logic.lines.length - 1 ? <Check /> : <Die />}
+                    {line}
+                  </li>
                 ))}
-              </div>
+              </ul>
             </div>
-            <h3 className={styles.title}>{f.languages.title}</h3>
-            <p className={styles.body}>{f.languages.body}</p>
           </article>
 
-          <article className={`${styles.card} ${styles.logic}`} data-reveal style={delay(3)}>
-            <div className={styles.visual} aria-hidden="true">
-              <div className={styles.sheet}>
-                <span className={styles.sheetTitle}>{f.logic.card}</span>
-                <ul>
-                  {f.logic.lines.map((line, i) => (
-                    <li key={line}>
-                      {i < f.logic.lines.length - 1 ? <Check /> : <Die />}
-                      {line}
-                    </li>
-                  ))}
-                </ul>
-              </div>
+          <article className={`${styles.chapter} ${styles.world}`} data-reveal style={order(3)}>
+            <div className={styles.copy}>
+              <Num n={4} />
+              <h3 className={styles.title}>{f.world.title}</h3>
+              <p className={styles.body}>{f.world.body}</p>
             </div>
-            <h3 className={styles.title}>{f.logic.title}</h3>
-            <p className={styles.body}>{f.logic.body}</p>
-          </article>
-
-          <article className={`${styles.card} ${styles.world}`} data-reveal style={delay(4)}>
-            <div className={styles.visual} aria-hidden="true">
+            <div className={styles.worldVisual} aria-hidden="true">
               <div className={styles.sky}>
                 <span className={styles.sun} />
               </div>
@@ -140,38 +146,37 @@ export function Features({ t }: { t: Dictionary }) {
                 </span>
               </div>
             </div>
-            <h3 className={styles.title}>{f.world.title}</h3>
-            <p className={styles.body}>{f.world.body}</p>
           </article>
+        </ChapterStack>
 
-          <article className={`${styles.card} ${styles.memory}`} data-reveal style={delay(5)}>
-            <div className={styles.memoryText}>
-              <h3 className={styles.title}>{f.memory.title}</h3>
-              <p className={styles.body}>{f.memory.body}</p>
-            </div>
-            <div className={styles.memoryPanel} aria-hidden="true">
-              <span className={styles.panelTitle}>{f.memory.label}</span>
-              <span className={styles.panelSub}>{f.memory.sublabel}</span>
-              <ul>
-                {f.memory.items.map((item, i) => (
-                  <li key={item.name} className={i === 0 ? styles.gone : undefined}>
-                    <span className={styles.avatar}>
-                      {item.name
-                        .replace(/^(El |L'|The )/, "")
-                        .charAt(0)
-                        .toUpperCase()}
-                    </span>
-                    <span>
-                      <b>{item.name}</b>
-                      <small>{item.note}</small>
-                    </span>
-                  </li>
+        <div className={styles.trio}>
+          <article className={`${styles.card} ${styles.voice}`} data-reveal style={delay(0)}>
+            <div className={styles.visual} aria-hidden="true">
+              <div className={styles.player}>
+                <span className={styles.playButton}>
+                  <svg viewBox="0 0 24 24">
+                    <path d="M8 5.5v13l11-6.5z" />
+                  </svg>
+                </span>
+                <span className={styles.wave}>
+                  {Array.from({ length: 28 }, (_, i) => (
+                    <i key={i} style={order(i)} />
+                  ))}
+                </span>
+              </div>
+              <div className={styles.voices}>
+                {VOICES.map((voice, i) => (
+                  <span key={voice} className={i === 0 ? styles.voiceOn : styles.voiceName}>
+                    {voice}
+                  </span>
                 ))}
-              </ul>
+              </div>
             </div>
+            <h3 className={styles.cardTitle}>{f.voice.title}</h3>
+            <p className={styles.cardBody}>{f.voice.body}</p>
           </article>
 
-          <article className={`${styles.card} ${styles.dictation}`} data-reveal style={delay(6)}>
+          <article className={`${styles.card} ${styles.dictation}`} data-reveal style={delay(1)}>
             <div className={styles.visual} aria-hidden="true">
               <span className={styles.micRing}>
                 <svg viewBox="0 0 24 24">
@@ -181,8 +186,23 @@ export function Features({ t }: { t: Dictionary }) {
               </span>
               <span className={styles.transcript}>“{f.dictation.sample}”</span>
             </div>
-            <h3 className={styles.title}>{f.dictation.title}</h3>
-            <p className={styles.body}>{f.dictation.body}</p>
+            <h3 className={styles.cardTitle}>{f.dictation.title}</h3>
+            <p className={styles.cardBody}>{f.dictation.body}</p>
+          </article>
+
+          <article className={`${styles.card} ${styles.languages}`} data-reveal style={delay(2)}>
+            <div className={styles.visual} aria-hidden="true">
+              <div className={styles.hints}>
+                {HINTS.map((hint, i) => (
+                  <span key={hint.code} lang={hint.lang} className={styles.hint} style={order(i)}>
+                    <b>{hint.code}</b>
+                    {hint.text}
+                  </span>
+                ))}
+              </div>
+            </div>
+            <h3 className={styles.cardTitle}>{f.languages.title}</h3>
+            <p className={styles.cardBody}>{f.languages.body}</p>
           </article>
         </div>
       </div>
