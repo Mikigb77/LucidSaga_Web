@@ -863,8 +863,11 @@
   font-weight: 600;
 }
 
-.following .caption {
-  display: none;
+/* Beside the steps (HowSteps' WIDE_AND_TALL), the steps name themselves. */
+@media (min-width: 901px) and (min-height: 600px) {
+  .caption {
+    display: none;
+  }
 }
 
 .captionN {

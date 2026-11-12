@@ -3,9 +3,7 @@
 import { useEffect, useRef, type ReactNode } from "react";
 
 import { coverOf } from "./scrollProgress";
-
-/** Where the chapters stack: the same wide, tall windows where How it plays' phone stays put. */
-const STACK = "(min-width: 901px) and (min-height: 600px)";
+import { REDUCED_MOTION, useMedia, WIDE_AND_TALL } from "./useMedia";
 
 /**
  * Features' chapters, which stay under the header in turn as the page scrolls, each sliding over
@@ -15,29 +13,31 @@ const STACK = "(min-width: 901px) and (min-height: 600px)";
  */
 export function ChapterStack({ className, children }: { className: string; children: ReactNode }) {
   const ref = useRef<HTMLDivElement>(null);
+  const stacked = useMedia(WIDE_AND_TALL);
+  const reduced = useMedia(REDUCED_MOTION);
 
   useEffect(() => {
     const root = ref.current;
     if (!root) return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    const media = window.matchMedia(STACK);
     const chapters = Array.from(root.children) as HTMLElement[];
+    const clear = () => chapters.forEach((chapter) => chapter.style.removeProperty("--cover"));
+    if (!stacked || reduced) {
+      clear();
+      return;
+    }
 
     let frame = 0;
     const draw = () => {
       frame = 0;
+      // Every place is read before any chapter moves, so the page is laid out once a frame. A
+      // chapter settles back from its top edge, so its top stays where it is.
+      const places = chapters.map((chapter) => ({
+        top: chapter.getBoundingClientRect().top,
+        height: chapter.offsetHeight,
+      }));
       chapters.forEach((chapter, i) => {
-        const next = chapters[i + 1];
-        if (!next || !media.matches) {
-          chapter.style.removeProperty("--cover");
-          return;
-        }
-        // A chapter settles back from its top edge, so its top stays where it is.
-        const cover = coverOf(
-          chapter.getBoundingClientRect().top,
-          chapter.offsetHeight,
-          next.getBoundingClientRect().top,
-        );
+        const next = places[i + 1];
+        const cover = next ? coverOf(places[i].top, places[i].height, next.top) : 0;
         chapter.style.setProperty("--cover", cover.toFixed(3));
       });
     };
@@ -47,14 +47,13 @@ export function ChapterStack({ className, children }: { className: string; child
     schedule();
     window.addEventListener("scroll", schedule, { passive: true });
     window.addEventListener("resize", schedule);
-    media.addEventListener("change", schedule);
     return () => {
       if (frame) cancelAnimationFrame(frame);
       window.removeEventListener("scroll", schedule);
       window.removeEventListener("resize", schedule);
-      media.removeEventListener("change", schedule);
+      clear();
     };
-  }, []);
+  }, [stacked, reduced]);
 
   return (
     <div ref={ref} className={className}>

@@ -7,6 +7,7 @@ import type { Dictionary } from "@/i18n";
 
 import styles from "./PlayDemo.module.css";
 import { finishedAt, initial, PLAY, startOf, stepScreen, type Progress } from "./playScript";
+import { REDUCED_MOTION } from "./useMedia";
 
 type Demo = Dictionary["demo"];
 type Memory = Dictionary["features"]["memory"];
@@ -40,7 +41,7 @@ const pause = (word: string) => WORD_MS + (word.endsWith(".") || word.endsWith("
  * has been kept (04).
  *
  * Beside the steps (`follow`), it shows the step the page has scrolled to, and plays that step's
- * moment the first time it gets there going down. Elsewhere it plays the four steps by itself in
+ * moment the first time it gets there. Elsewhere it plays the four steps by itself in
  * a loop, naming each one under the phone. Either way it rests while off screen, and visitors who
  * ask for reduced motion see each step already played. Screen readers get the scene as plain
  * text instead.
@@ -53,6 +54,7 @@ export function PlayDemo({
   picture,
   accent,
   follow,
+  reduced,
   step,
 }: {
   t: Demo;
@@ -63,6 +65,8 @@ export function PlayDemo({
   accent: string;
   /** Show the step the page has scrolled to, instead of playing the steps in a loop. */
   follow: boolean;
+  /** The visitor asks for reduced motion: show each step already played. */
+  reduced: boolean;
   /** The step the page has scrolled to, from 0. */
   step: number;
 }) {
@@ -77,7 +81,8 @@ export function PlayDemo({
   const scrollRef = useRef<HTMLDivElement>(null);
   const visible = useRef(false);
   const wakeRef = useRef<(() => void) | null>(null);
-  const lastStep = useRef(-1);
+  // The furthest step the page has scrolled to: each step's moment plays only the first time.
+  const furthest = useRef(-1);
 
   // Whether the phone is on screen: its moments wait for it.
   useEffect(() => {
@@ -98,7 +103,8 @@ export function PlayDemo({
   }, []);
 
   useEffect(() => {
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    // Asked directly as well: while the page hydrates, the prop is still the server's false.
+    const still = reduced || window.matchMedia(REDUCED_MOTION).matches;
     let cancelled = false;
 
     // Waits ms, and then for as long as the phone is off screen.
@@ -168,9 +174,15 @@ export function PlayDemo({
       return () => cancelAnimationFrame(id);
     };
 
+    const stop = (undo: () => void) => () => {
+      undo();
+      cancelled = true;
+      wakeRef.current?.();
+    };
+
     if (!follow) {
-      lastStep.current = -1;
-      if (reduced) {
+      furthest.current = -1;
+      if (still) {
         // Reduced motion: the scene as it ends, as the page showed it before the steps.
         return later(() => {
           setShown(2);
@@ -178,37 +190,31 @@ export function PlayDemo({
           setFading(false);
         });
       }
-      loop().catch(() => undefined);
-      return () => {
-        cancelled = true;
-        wakeRef.current?.();
-      };
+      // A frame later: on a wide window the page hydrates as if narrow, and then follows at once.
+      return stop(later(() => loop().catch(() => undefined)));
     }
 
-    // Following the page: going down plays the step's moment; going back up shows it played.
-    const from = lastStep.current;
-    lastStep.current = step;
-    if (reduced || step < from) {
+    // Following the page: the first time it reaches a step going down, the step's moment plays;
+    // a step it has been to before shows as played.
+    if (still || step <= furthest.current) {
       return later(() => {
         setShown(step);
         setProgress(finishedAt(step, sizes));
         setFading(false);
       });
     }
-    const undo = later(() => {
-      setShown(step);
-      setProgress(startOf(step, sizes));
-      setFading(false);
-      play(step).catch(() => undefined);
-    });
-    return () => {
-      undo();
-      cancelled = true;
-      wakeRef.current?.();
-    };
+    return stop(
+      later(() => {
+        furthest.current = step;
+        setShown(step);
+        setProgress(startOf(step, sizes));
+        setFading(false);
+        play(step).catch(() => undefined);
+      }),
+    );
     // The words come from the page's language, which never changes while it is open.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [follow, step]);
+  }, [follow, reduced, step]);
 
   // Keep the newest words in view, as the app does while a scene streams.
   useEffect(() => {
@@ -223,7 +229,7 @@ export function PlayDemo({
   const [elder, mage] = memory.items;
 
   return (
-    <figure className={`${styles.figure} ${follow ? styles.following : ""}`} ref={frameRef}>
+    <figure className={styles.figure} ref={frameRef}>
       <div className={styles.phone} aria-hidden="true" style={{ "--accent": accent } as CSSProperties}>
         <div className={`${styles.screen} ${fading ? styles.fading : ""}`}>
           <div className={styles.status}>

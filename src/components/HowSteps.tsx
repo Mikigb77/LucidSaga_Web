@@ -1,28 +1,14 @@
 "use client";
 
 import type { StaticImageData } from "next/image";
-import { useEffect, useRef, useState, useSyncExternalStore, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 
 import type { Dictionary } from "@/i18n";
 
 import styles from "./HowItPlays.module.css";
 import { PlayDemo, type DemoWorld } from "./PlayDemo";
 import { reached } from "./playScript";
-
-/** Where the phone stays beside the steps and follows them: wide windows tall enough to hold it. */
-const FOLLOW = "(min-width: 901px) and (min-height: 600px)";
-
-function useMedia(query: string) {
-  return useSyncExternalStore(
-    (onChange) => {
-      const media = window.matchMedia(query);
-      media.addEventListener("change", onChange);
-      return () => media.removeEventListener("change", onChange);
-    },
-    () => window.matchMedia(query).matches,
-    () => false,
-  );
-}
+import { REDUCED_MOTION, useMedia, WIDE_AND_TALL } from "./useMedia";
 
 /**
  * How it plays' four steps beside the phone. The gold thread joining the steps' numbers draws
@@ -52,13 +38,14 @@ export function HowSteps({
 }) {
   const list = useRef<HTMLOListElement>(null);
   const [step, setStep] = useState(0);
-  const follow = useMedia(FOLLOW);
+  const follow = useMedia(WIDE_AND_TALL);
+  const reduced = useMedia(REDUCED_MOTION);
 
   useEffect(() => {
     const element = list.current;
     if (!element) return;
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (!reduced) element.setAttribute("data-drawing", "");
+    // Asked directly as well: while the page hydrates, `reduced` is still the server's false.
+    if (!window.matchMedia(REDUCED_MOTION).matches) element.setAttribute("data-drawing", "");
 
     let frame = 0;
     const draw = () => {
@@ -87,7 +74,7 @@ export function HowSteps({
       window.removeEventListener("resize", schedule);
       element.removeAttribute("data-drawing");
     };
-  }, []);
+  }, [reduced]);
 
   return (
     <div className={styles.grid}>
@@ -101,7 +88,8 @@ export function HowSteps({
             picture={picture}
             accent={accent}
             follow={follow}
-            step={step}
+            reduced={reduced}
+            step={follow ? step : 0}
           />
         </div>
       </div>

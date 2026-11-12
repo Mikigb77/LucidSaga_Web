@@ -4,6 +4,7 @@ import { describe, expect, it } from "vitest";
 
 import { finishedAt, initial, PLAY, reached, startOf, stepScreen } from "./playScript";
 import { activeSection, coverOf, readProgress } from "./scrollProgress";
+import { WIDE_AND_TALL } from "./useMedia";
 
 const sizes = { words1: 26, words2: 40, action: 47 };
 const css = (name: string) => readFileSync(new URL(name, import.meta.url), "utf8");
@@ -162,5 +163,13 @@ describe("the motion, under reduced motion", () => {
     expect(css("./PlayDemo.module.css")).toMatch(
       /@media \(prefers-reduced-motion: reduce\) \{\s*\.view,[^}]*transition: none;/,
     );
+  });
+});
+
+describe("where the phone follows the steps and the chapters stack", () => {
+  it("is the same window size in the scripts and in every stylesheet that lays it out", () => {
+    for (const sheet of ["./HowItPlays.module.css", "./PlayDemo.module.css", "./Features.module.css"]) {
+      expect(css(sheet), sheet).toContain(`@media ${WIDE_AND_TALL} {`);
+    }
   });
 });

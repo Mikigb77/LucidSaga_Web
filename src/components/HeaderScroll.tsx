@@ -1,5 +1,6 @@
 "use client";
 
+import { usePathname } from "next/navigation";
 import { useEffect } from "react";
 
 import { activeSection, readProgress } from "./scrollProgress";
@@ -10,6 +11,8 @@ import { activeSection, readProgress } from "./scrollProgress";
  * read (--progress), and lights the link of the section the reader is in.
  */
 export function HeaderScroll() {
+  // Moving between the home page and a legal page may not scroll, so a new page updates it too.
+  const pathname = usePathname();
   useEffect(() => {
     const header = document.querySelector<HTMLElement>("[data-header]");
     if (!header) return;
@@ -43,6 +46,6 @@ export function HeaderScroll() {
       window.removeEventListener("resize", onScroll);
       if (frame) cancelAnimationFrame(frame);
     };
-  }, []);
+  }, [pathname]);
   return null;
 }
